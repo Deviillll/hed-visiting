@@ -1,28 +1,11 @@
-import { LoginForm } from "@/components/login-form";
-import { GalleryVerticalEnd } from "lucide-react";
-import Image from "next/image";
+import { Metadata } from "next";
+import { LoginForm } from "@/components/auth/login-form";
+
+export const metadata: Metadata = {
+  title: "Login - Role-Based Admin Dashboard",
+  description: "Login to access your role-based dashboard",
+};
 
 export default function LoginPage() {
-	return (
-		<div className="grid min-h-svh lg:grid-cols-2">
-			<div className="flex flex-col gap-4 p-6 md:p-10">
-		
-				<div className="flex flex-1 items-center justify-center">
-					<div className="w-full max-w-xs">
-						<LoginForm />
-					</div>
-				</div>
-			</div>
-			<div className="bg-muted relative hidden lg:block">
-				<Image
-					src="https://placehold.co/1920x1080?text=Login+Background"
-          alt="Login Background"
-          width={1920}
-          height={1080}
-					
-					className="object-cover dark:brightness-[0.2] dark:grayscale"
-				/>
-			</div>
-		</div>
-	);
+  return <LoginForm />;
 }
