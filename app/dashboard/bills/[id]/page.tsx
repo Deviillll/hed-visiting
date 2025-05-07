@@ -1,16 +1,15 @@
 "use client";
 
-import React from "react";
-import { useRoleProtection } from "@/lib/auth-utils";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2, FileText, Search, ArrowLeft } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useRoleProtection } from "@/lib/auth-utils";
+import { ArrowLeft, FileText, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 // Mock employees data for search
