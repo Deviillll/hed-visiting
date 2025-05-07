@@ -1,57 +1,25 @@
 "use client";
 
-import { useRoleProtection } from "@/lib/auth-utils";
-import { Loader2, FileText, Plus } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import { DataTable } from "@/components/dashboard/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+import { useRoleProtection } from "@/lib/auth-utils";
+import { useBillStore, type Bill, type BillStatus } from "@/lib/stores/bill-store";
+import { FileText, Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-// Bill status types
-type BillStatus = "draft" | "pending_level2" | "pending_principal" | "approved" | "rejected";
-
-interface Bill {
-  id: string;
-  name: string;
-  startDate: string;
-  endDate: string;
-  status: BillStatus;
-  createdBy: string;
-  approvedBy?: string;
-}
-
-// Mock data for bills
-const initialBills: Bill[] = [
-  {
-    id: "1",
-    name: "January 2025 Teaching Bill",
-    startDate: "2025-01-01",
-    endDate: "2025-01-31",
-    status: "draft",
-    createdBy: "Admin User"
-  },
-  {
-    id: "2",
-    name: "December 2024 Teaching Bill",
-    startDate: "2024-12-01",
-    endDate: "2024-12-31",
-    status: "approved",
-    createdBy: "Admin User",
-    approvedBy: "Principal User"
-  }
-];
+import { useState } from "react";
+import { toast } from "sonner";
 
 function CreateBillDialog() {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const addBill = useBillStore(state => state.addBill);
 
   const handleSubmit = () => {
     if (!name || !startDate || !endDate) {
@@ -59,7 +27,6 @@ function CreateBillDialog() {
       return;
     }
 
-    // In a real app, this would make an API call
     const newBill: Bill = {
       id: (Math.random() * 1000).toString(),
       name,
@@ -68,13 +35,8 @@ function CreateBillDialog() {
       status: "draft",
       createdBy: "Admin User"
     };
-    // it should be updating the state of bill in BillsPage
     
-    
-    
-
-    
-
+    addBill(newBill);
     toast.success("Bill created successfully");
     setOpen(false);
     setName("");
@@ -133,7 +95,7 @@ function CreateBillDialog() {
 
 export default function BillsPage() {
   const { isLoading } = useRoleProtection(["admin"]);
-  const [bills] = useState<Bill[]>(initialBills);
+  const bills = useBillStore(state => state.bills);
   const router = useRouter();
 
   const columns = [
