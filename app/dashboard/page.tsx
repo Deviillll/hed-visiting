@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Users, Building2, Briefcase, LineChart, BarChart2, PieChart, Clock } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatsCard } from "@/components/dashboard/stats-card";
-import { ActivityList } from "@/components/dashboard/activity-list";
+
 
 // Mock activity data
 const recentActivities = [
@@ -240,7 +240,7 @@ export default function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ActivityList activities={recentActivities} />
+            {/* Activity List */}
           </CardContent>
         </Card>
 
