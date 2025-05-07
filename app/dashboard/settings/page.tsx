@@ -135,53 +135,13 @@ export default function SettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="language">Language</Label>
-                <Select defaultValue="en">
-                  <SelectTrigger id="language">
-                    <SelectValue placeholder="Select language" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="es">Spanish</SelectItem>
-                    <SelectItem value="fr">French</SelectItem>
-                    <SelectItem value="de">German</SelectItem>
-                    <SelectItem value="ja">Japanese</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="timezone">Timezone</Label>
-                <Select defaultValue="utc-8">
-                  <SelectTrigger id="timezone">
-                    <SelectValue placeholder="Select timezone" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="utc-12">UTC-12:00</SelectItem>
-                    <SelectItem value="utc-8">UTC-08:00 (Pacific Time)</SelectItem>
-                    <SelectItem value="utc-5">UTC-05:00 (Eastern Time)</SelectItem>
-                    <SelectItem value="utc">UTC+00:00 (Greenwich Mean Time)</SelectItem>
-                    <SelectItem value="utc+1">UTC+01:00 (Central European Time)</SelectItem>
-                    <SelectItem value="utc+8">UTC+08:00 (China Standard Time)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-4">
                 <h3 className="text-lg font-medium">Security</h3>
                 <div className="space-y-4">
-                  <Button variant="outline">Change Password</Button>
-                  <Button variant="outline">Enable Two-Factor Authentication</Button>
+                  <Button variant="outline">Change Password</Button>                  
                 </div>
-              </div>
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Danger Zone</h3>
-                <div className="space-y-4">
-                  <Button variant="destructive">Delete Account</Button>
-                </div>
-              </div>
+              
             </CardContent>
           </Card>
         </TabsContent>
@@ -220,31 +180,10 @@ export default function SettingsPage() {
                   <Switch id="browser-notifications" />
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="weekly-digest">Weekly Digest</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Receive a weekly summary of activities
-                    </p>
-                  </div>
-                  <Switch id="weekly-digest" defaultChecked />
-                </div>
+                
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email-frequency">Email Frequency</Label>
-                <Select defaultValue="immediately">
-                  <SelectTrigger id="email-frequency">
-                    <SelectValue placeholder="Select frequency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="immediately">Immediately</SelectItem>
-                    <SelectItem value="daily">Daily Digest</SelectItem>
-                    <SelectItem value="weekly">Weekly Digest</SelectItem>
-                    <SelectItem value="never">Never</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+
 
               <div className="flex justify-end">
                 <Button onClick={handleSaveNotifications} disabled={isUpdating}>

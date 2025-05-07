@@ -60,6 +60,21 @@ function CreateBillDialog() {
     }
 
     // In a real app, this would make an API call
+    const newBill: Bill = {
+      id: (Math.random() * 1000).toString(),
+      name,
+      startDate,
+      endDate,
+      status: "draft",
+      createdBy: "Admin User"
+    };
+    // it should be updating the state of bill in BillsPage
+    
+    
+    
+
+    
+
     toast.success("Bill created successfully");
     setOpen(false);
     setName("");
@@ -193,7 +208,7 @@ export default function BillsPage() {
           data={bills}
           columns={columns}
           searchField="name"
-          itemsPerPage={5}
+          itemsPerPage={40}
         />
       </Card>
     </div>
