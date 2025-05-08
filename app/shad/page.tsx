@@ -1,5 +1,5 @@
 import { Terminal } from "lucide-react";
-
+import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 // Mock employees data for search
 const mockEmployees = [
@@ -51,14 +51,8 @@ const mockEmployees = [
 
 const Page = () => {
 	return (
-		<div className="container mx-auto p-6 max-w-xlg">
-			<Alert>
-				<Terminal className="h-4 w-4" />
-				<AlertTitle>Heads up!</AlertTitle>
-				<AlertDescription>
-					You can add components to your app using the cli.
-				</AlertDescription>
-			</Alert>
+		<div className="container mx-auto p-6 max-w-xlg bg-red-200">
+			<Button > Test</Button>
 		</div>
 	);
 };
