@@ -36,8 +36,22 @@ const initialBills: Bill[] = [
     status: "approved",
     createdBy: "Admin User",
     approvedBy: "Principal User"
-  }
+  },
+  // add 20 more bills
 ];
+// add 20 more bills  for testing for each month of 2024
+for (let i = 1; i <= 32; i++) {
+  initialBills.push({
+    id: (i + 2).toString(),
+    name: `Bill ${i}`,
+    startDate: `2024-${i}-01`,
+    endDate: `2024-${i}-31`,
+    status: "approved",
+    createdBy: "Admin User",
+    approvedBy: "Principal User"
+  });
+}
+
 
 export const useBillStore = create<BillStore>((set) => ({
   bills: initialBills,

@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { AuthState, User, UserRole } from "@/lib/types";
+import { CloudCog } from "lucide-react";
 
 // Mock users for demonstration purposes
 // In a real app, you would fetch this from an API
@@ -90,9 +91,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const user = MOCK_USERS.find(u => u.email === email && u.password === password);
     
     if (user) {
-      // Create a user object without the password
-      const { password: _, ...safeUser } = user;
-      
+			// Create a user object without the password
+			const { password: _, ...safeUser } = user;
+			console.log("user ", safeUser);
+
       // Store in state
       setAuthState({
         user: safeUser,

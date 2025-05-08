@@ -1,25 +1,38 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { Providers } from '@/app/providers';
+import { Providers } from "@/app/providers";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { Toaster } from "sonner";
+import "./globals.css";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Role-Based Admin Dashboard',
-  description: 'A modern admin dashboard with role-based authentication',
+	title: "Role-Based Admin Dashboard",
+	description: "A modern admin dashboard with role-based authentication",
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <Providers>{children}</Providers>
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en" suppressHydrationWarning>
+			<body className={inter.className}>
+				<Providers>
+					{children}
+					<Toaster
+						position="top-center"
+						toastOptions={{
+							style: {
+								background: "hsl(var(--background))",
+								color: "hsl(var(--foreground))",
+								border: "1px solid hsl(var(--border))",
+							},
+						}}
+					/>
+				</Providers>
+			</body>
+		</html>
+	);
 }
