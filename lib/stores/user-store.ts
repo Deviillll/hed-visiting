@@ -3,8 +3,8 @@ import {
 	UpdateUserDTO,
 	User,
 	UserQuery,
-	UserRole,
 } from "@/lib/models/user";
+import { UserRole } from "@/lib/types";
 import { create } from "zustand";
 
 interface UserState {
@@ -18,9 +18,44 @@ interface UserState {
 	getEmployeesByPrincipal: (principalId: string) => User[];
 }
 
-// Initial users data
-const initialUsers: User[] = [
-	{
+// Define departments
+const departments = [
+	"Engineering",
+	"Marketing",
+	"Finance",
+	"Human Resources",
+	"Product",
+	"Customer Support",
+	"Sales",
+	"Research",
+	"Legal",
+	"Operations",
+];
+
+// Define positions
+const positions = [
+	"Junior Developer",
+	"Senior Developer",
+	"Team Lead",
+	"Project Manager",
+	"Marketing Specialist",
+	"Content Writer",
+	"Financial Analyst",
+	"HR Specialist",
+	"Product Manager",
+	"Support Specialist",
+	"Sales Representative",
+	"Researcher",
+	"Legal Advisor",
+	"Operations Manager",
+];
+
+// Function to generate random users
+const generateUsers = (count: number) => {
+	const users: User[] = [];
+
+	// Create super admin user (always active)
+	users.push({
 		id: "1",
 		email: "superadmin@example.com",
 		password: "password",
@@ -31,53 +66,91 @@ const initialUsers: User[] = [
 		status: "active",
 		createdAt: new Date().toISOString(),
 		updatedAt: new Date().toISOString(),
-	},
-	{
-		id: "2",
-		email: "admin@example.com",
-		password: "password",
-		name: "Admin User",
-		role: "admin",
-		avatar:
-			"https://images.pexels.com/photos/2216607/pexels-photo-2216607.jpeg?auto=compress&cs=tinysrgb&w=100",
-		status: "active",
-		managedDepartments: ["Engineering", "Marketing"],
-		createdAt: new Date().toISOString(),
-		updatedAt: new Date().toISOString(),
-	},
-	{
-		id: "3",
-		email: "principal@example.com",
-		password: "password",
-		name: "Principal User",
-		role: "principal",
-		avatar:
-			"https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=100",
-		status: "active",
-		department: "Engineering",
-		employees: ["4", "5"],
-		createdAt: new Date().toISOString(),
-		updatedAt: new Date().toISOString(),
-	},
-	{
-		id: "4",
-		email: "employee@example.com",
-		password: "password",
-		name: "Employee User",
-		role: "employee",
-		avatar:
-			"https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100",
-		status: "active",
-		department: "Engineering",
-		position: "Software Engineer",
-		interRate: 15,
-		bsRate: 20,
-		lastRateUpdate: new Date().toISOString(),
-		principalId: "3",
-		createdAt: new Date().toISOString(),
-		updatedAt: new Date().toISOString(),
-	},
-];
+	});
+
+	// Create 9 admin users (2 will be active)
+	for (let i = 0; i < 9; i++) {
+		users.push({
+			id: (users.length + 1).toString(),
+			email: `admin${i + 1}@example.com`,
+			password: "password",
+			name: `Admin User ${i + 1}`,
+			role: "admin",
+			avatar:
+				"https://images.pexels.com/photos/2216607/pexels-photo-2216607.jpeg?auto=compress&cs=tinysrgb&w=100",
+			status: i < 2 ? "active" : "inactive", // First 2 admins are active
+			managedDepartments: [
+				departments[Math.floor(Math.random() * departments.length)],
+				departments[Math.floor(Math.random() * departments.length)],
+			],
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString(),
+		});
+	}
+
+	// Create 10 principal users (only 1 will be active)
+	for (let i = 0; i < 10; i++) {
+		const dept = departments[i % departments.length];
+		users.push({
+			id: (users.length + 1).toString(),
+			email: `principal${i + 1}@example.com`,
+			password: "password",
+			name: `Principal User ${i + 1}`,
+			role: "principal",
+			avatar:
+				"https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=100",
+			status: i === 0 ? "active" : "inactive", // Only the first principal is active
+			department: dept,
+			employees: [], // Will be filled after creating employees
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString(),
+		});
+	}
+
+	// Create remaining users as employees (80 employees, 25% will be active)
+	const remainingCount = count - users.length;
+	for (let i = 0; i < remainingCount; i++) {
+		const deptIndex = i % departments.length;
+		const posIndex = i % positions.length;
+		const principalId = (
+			10 +
+			Math.floor(deptIndex / (departments.length / 10)) +
+			1
+		).toString();
+
+		users.push({
+			id: (users.length + 1).toString(),
+			email: `employee${i + 1}@example.com`,
+			password: "password",
+			name: `Employee User ${i + 1}`,
+			role: "employee",
+			avatar:
+				"https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100",
+			status: i < remainingCount * 0.25 ? "active" : "inactive", // 25% of employees are active
+			department: departments[deptIndex],
+			position: positions[posIndex],
+			interRate: 15 + Math.floor(Math.random() * 20),
+			bsRate: 20 + Math.floor(Math.random() * 30),
+			lastRateUpdate: new Date().toISOString(),
+			principalId: principalId,
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString(),
+		});
+
+		// Add employee ID to their principal's employees array
+		const principal = users.find(
+			(u) => u.id === principalId && u.role === "principal"
+		);
+		if (principal && "employees" in principal) {
+			principal.employees.push(users[users.length - 1].id);
+		}
+	}
+
+	return users;
+};
+
+// Generate 100 users
+const initialUsers: User[] = generateUsers(100);
 
 export const useUserStore = create<UserState>((set, get) => ({
 	users: initialUsers,
