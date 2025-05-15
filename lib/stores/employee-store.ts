@@ -9,6 +9,7 @@ interface EmployeeState {
 	getEmployeeById: (id: string) => Employee | undefined;
 	getEmployeesByDepartment: (department: string) => Employee[];
 	getEmployeesByPrincipal: (principalId: string) => Employee[];
+	toggleEmployeeStatus: (id: string) => void;
 }
 
 export const useEmployeeStore = create<EmployeeState>((set, get) => ({
@@ -70,4 +71,32 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
 			(employee) => employee.principalId === principalId
 		);
 	},
+	// create employee status toggle function
+	toggleEmployeeStatus: (id) => {
+		const userStore = useUserStore.getState();
+		const employee = userStore.getUserById(id);
+
+		if (employee) {
+			userStore.updateUser(id, {
+				status:
+					employee.status === "active" ? "inactive" : "active",
+			});
+		}
+
+		set((state) => ({
+			employees: state.employees.map((employee) =>
+				employee.id === id
+					? {
+							...employee,
+							status:
+								employee.status === "active"
+									? "inactive"
+									: "active",
+					  }
+					: employee
+			),
+		}));
+	},
 }));
+export { Employee };
+

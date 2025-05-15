@@ -62,7 +62,7 @@ const generateUsers = (count: number) => {
 		name: "Super Admin",
 		role: "superadmin",
 		avatar:
-			"https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=100",
+			"https://github.com/shadcn.png",
 		status: "active",
 		createdAt: new Date().toISOString(),
 		updatedAt: new Date().toISOString(),
@@ -77,7 +77,7 @@ const generateUsers = (count: number) => {
 			name: `Admin User ${i + 1}`,
 			role: "admin",
 			avatar:
-				"https://images.pexels.com/photos/2216607/pexels-photo-2216607.jpeg?auto=compress&cs=tinysrgb&w=100",
+				"https://github.com/shadcn.png",
 			status: i < 2 ? "active" : "inactive", // First 2 admins are active
 			managedDepartments: [
 				departments[Math.floor(Math.random() * departments.length)],
@@ -125,7 +125,7 @@ const generateUsers = (count: number) => {
 			name: `Employee User ${i + 1}`,
 			role: "employee",
 			avatar:
-				"https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100",
+				"https://github.com/shadcn.png",
 			status: i < remainingCount * 0.25 ? "active" : "inactive", // 25% of employees are active
 			department: departments[deptIndex],
 			position: positions[posIndex],
@@ -136,6 +136,7 @@ const generateUsers = (count: number) => {
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
 		});
+		
 
 		// Add employee ID to their principal's employees array
 		const principal = users.find(
@@ -162,7 +163,7 @@ export const useUserStore = create<UserState>((set, get) => ({
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
 			avatar:
-				"https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=100",
+				"https://github.com/shadcn.png",
 		} as User;
 
 		set((state) => ({

@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "D:\\clg project\\hed-next-visiting\\logs\\.fc2dc35d474573753a572eb501188f89cc4803be-audit.json",
+    "files": [
+        {
+            "date": 1747300569843,
+            "name": "D:\\clg project\\hed-next-visiting\\logs\\error-2025-05-15.log",
+            "hash": "439a6efea85385c46c0018640026fa1e5aa05507c71745084d53ec161ebedc8c"
+        }
+    ],
+    "hashType": "sha256"
+}

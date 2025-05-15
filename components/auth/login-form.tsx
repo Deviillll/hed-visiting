@@ -56,8 +56,15 @@ export function LoginForm() {
 			const success = await login(data.email, data.password);
 
 			if (success) {
+				
 				toast.success("Login successful", {
 					description: "Redirecting to your dashboard...",
+					"position": "top-right",
+					"style": {
+						"background": "#4caf50",
+						"color": "#fff",
+					},
+					
 				});
 				router.push("/dashboard");
 			} else {
