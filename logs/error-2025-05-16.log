@@ -1,0 +1,2 @@
+{"message":"[POST http://localhost:3000/api/register] User validation failed: roleId: Path `roleId` is required.","timestamp":"16/05/2025, 11:20 am"}
+{"message":"[POST http://localhost:3000/api/login] roleId is not defined","timestamp":"16/05/2025, 11:58 am"}
