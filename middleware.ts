@@ -28,8 +28,8 @@ export async function middleware(request: NextRequest) {
   }
 }
 
-// Apply to specific routes
+
 export const config = {
-  matcher: ['/api/institute/:path*', '/api/department/:path*'],
+  matcher: ['/api/institute/:path*', '/api/department/:path*', '/api/class/:path*'],
 };
 
