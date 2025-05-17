@@ -4,9 +4,10 @@ import { HttpError } from '@/globalHandler/httpError';
 import connectDb from '@/lib/db'
 import Role from '@/lib/models/roleModel'
 import { NextResponse } from 'next/server'
+//@ts-expect-error
 import bcrypt from "bcryptjs";
 import User from '@/lib/models/userModel'
-import crypto from "crypto";
+import { generateRandomString } from '@/utils/token/jwtToken';
 import VerificationToken from '@/lib/models/verifyTokenModel'
 
 
@@ -32,16 +33,8 @@ export const POST = withErrorHandler(
             const hashedPassword = await bcrypt.hash(password, 8);
 
             // generate random token
-            const generateRandomString = (length: number) => {
-                return crypto
-                    .randomBytes(length)
-                    .toString("base64")
-                    .replace(/\+/g, "0")
-                    .replace(/\//g, "0")
-                    .replace(/=+$/, "");
-            };
-
-            const token = generateRandomString(20);
+           
+            const token = generateRandomString();
 
             // new user creation
             if (!existingUser) {

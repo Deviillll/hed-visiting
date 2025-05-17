@@ -1,10 +1,14 @@
+import Role from '@/lib/models/roleModel';
+
 
 import message from '@/globalHandler/customMessage';
 import { withErrorHandler } from '@/globalHandler/errorHandler';
 import { HttpError } from '@/globalHandler/httpError';
 import connectDb from '@/lib/db'
 import { NextResponse } from 'next/server'
+//@ts-expect-error
 import bcrypt from "bcryptjs";
+
 import User from '@/lib/models/userModel'
 import { generateToken } from '@/utils/token/jwtToken'
 import { cookies } from "next/headers";
@@ -22,7 +26,8 @@ export const POST = withErrorHandler(
                 throw new HttpError("Please fill all fields", 400);
             }
             const lowerCaseEmail = email.toLowerCase();
-            const userExist = await User.findOne({ email: lowerCaseEmail });
+            const userExist = await User.findOne({ email: lowerCaseEmail })
+
             if (!userExist) {
                 throw new HttpError("User not found", 404);
             }
@@ -45,21 +50,35 @@ export const POST = withErrorHandler(
                 throw new HttpError("Your account is not active", 403);
 
             }
+            const role = await Role.findById(userExist.roleId);
+            if (!role) {
+                throw new HttpError("Role not found", 404);
+            }
+            ;
 
-            const token = generateToken(userExist)
+            const jsonUser = {
+                _id: userExist._id.toString(),
+                roleId: userExist.roleId.toString(),
+                role: role.role,
+            }
+
+
+
+
+            const token = await generateToken(jsonUser);
             const cookieStore = cookies();
             (await cookieStore).set({
                 name: "token",
                 value: token,
                 httpOnly: true,
                 path: "/",
-                maxAge: 60 * 60, // 1 hour
+                maxAge: 60 * 60 * 24 * 3, // 3 days
                 sameSite: "strict",
                 secure: true,
             });
 
             return NextResponse.json(
-                { message: "Login successful", status: 200, userName: userExist.name, token: token },
+                { message: "Login successful", status: 200, userName: userExist.name },
                 {
                     status: 200,
                     // headers: {
