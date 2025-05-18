@@ -1,0 +1,2 @@
+{"message":"[POST http://localhost:3000/api/billEntry] Schema hasn't been registered for model \"User\".\nUse mongoose.model(name, schema)","timestamp":"18/05/2025, 12:03 pm"}
+{"message":"[POST http://localhost:3000/api/billEntry] Bill entry already exists for the employee with class","timestamp":"18/05/2025, 12:29 pm"}
