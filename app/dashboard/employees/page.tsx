@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { useRoleProtection } from "@/lib/auth-utils";
 import { useEmployeeStore, type Employee } from "@/lib/stores/employee-store";
 import { Briefcase, Loader2, Pencil, UserCircle } from "lucide-react";
-import { use, useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 // Updated mock data for employees with rates
@@ -129,13 +129,12 @@ function EditRatesDialog({ employee, onSave }: EditRatesDialogProps) {
 	const [interRate, setInterRate] = useState(employee.interRate);
 	const [bsRate, setBsRate] = useState(employee.bsRate);
 	const [open, setOpen] = useState(false);
-	console.log(interRate, bsRate);
 
 	const handleSave = () => {
-		// if (interRate < 100 || interRate > 2000 || bsRate < 100 || bsRate > 2000) {
-		// 	toast.error("Rates must be between 100 and 2000");
-		// 	return;
-		// }
+		if (interRate < 100 || interRate > 2000 || bsRate < 100 || bsRate > 2000) {
+			toast.error("Rates must be between 100 and 2000");
+			return;
+		}
 		onSave(employee.id, interRate, bsRate);
 		setOpen(false);
 		toast.success("Rates updated successfully");
@@ -185,47 +184,11 @@ function EditRatesDialog({ employee, onSave }: EditRatesDialogProps) {
 }
 
 export default function EmployeesPage() {
-	const [isUpdate, setIsUpdate] = useState(false);
-	const updateStatus = async (id: string, status: string) => {
-		console.log(id, status);
-		let newStatus = status === "active" ? "inactive" : "active";
-		isUpdate ? setIsUpdate(false) : setIsUpdate(true);
-		const response = await fetch(`http://localhost:3000/employees/${id}`, {
-			method: 'PATCH', // Method to update the resource partially
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				status: newStatus,  // New status value
-			}),
-		});
-
-  if (response.ok) {
-	const data = await response.json();
-	console.log('Status updated successfully:', data);
-  } else {
-	console.error('Failed to update status');
-  }
-};
-	const [dummy, setDummy] = useState([]);
-	const fetchData = async () => {
-		const res = await fetch("http://localhost:3000/employees");
-		const data = await res.json();
-		setDummy(data);
-	}
-	useEffect(() => {
-	 fetchData();
-		
-	}, [isUpdate]);
-
-
-
 	const { employees, updateEmployeeRates, toggleEmployeeStatus } =
 		useEmployeeStore();
-	const { isLoading } = useRoleProtection(["superadmin", "admin"]);
+	const { isLoading } = useRoleProtection(["superadmin", "admin","principal"]);
 
 	const handleStatusToggle = (employee: Employee) => {
-		
 		toggleEmployeeStatus(employee.id);
 		toast.success(
 			`Employee status updated to ${
@@ -281,8 +244,7 @@ export default function EmployeesPage() {
 					className={`${
 						value === "active" ? "bg-green-500" : "bg-slate-400"
 					} cursor-pointer hover:opacity-80 transition-opacity`}
-				
-					onClick={() => updateStatus(employee.id, employee.status)}
+					onClick={() => handleStatusToggle(employee)}
 				>
 					{value}
 				</Badge>
@@ -319,7 +281,7 @@ export default function EmployeesPage() {
 
 			<Card className="p-6">
 				<DataTable
-					data={dummy}
+					data={employees}
 					columns={columns}
 					searchField="name"
 					itemsPerPage={5}

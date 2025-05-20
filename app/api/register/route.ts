@@ -52,7 +52,7 @@ export const POST = withErrorHandler(
 
                 //await sendEmail(name, email, token, "verification");
 
-                return NextResponse.json(message("User created successfully", 201), { status: 201 })
+                return NextResponse.json(message("User created successfully", 201 ,newUser.name), { status: 201 })
             }
             const deletedUser = existingUser.isDeleted;
             //soft deleted user
@@ -80,7 +80,7 @@ export const POST = withErrorHandler(
                 }
 
 
-                return NextResponse.json(message("User created successfully", 201), { status: 201 })
+                return NextResponse.json(message("User created successfully", 201, existingUser.name), { status: 201 })
                 //await sendEmail(name, email, token, "verification");
             }
 

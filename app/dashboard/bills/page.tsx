@@ -104,7 +104,7 @@ function CreateBillDialog() {
 }
 
 export default function BillsPage() {
-	const { isLoading } = useRoleProtection(["admin"]);
+	const { isLoading } = useRoleProtection(["admin","principal"]);
 	const bills = useBillStore((state) => state.bills);
 	const router = useRouter();
 

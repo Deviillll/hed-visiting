@@ -1,126 +1,95 @@
 "use client";
-
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-import { AuthState, User, UserRole } from "@/lib/types";
-import { CloudCog } from "lucide-react";
+import axios from "@/utils/axios"; // Ensure this is set up to use credentials
+import { AuthState, User } from "@/lib/types";
 
-// Mock users for demonstration purposes
-// In a real app, you would fetch this from an API
-const MOCK_USERS = [
-  {
-    id: "1",
-    email: "superadmin@example.com",
-    password: "password",
-    name: "Super Admin",
-    role: "superadmin" as UserRole,
-    avatar: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=100"
-  },
-  {
-    id: "2",
-    email: "admin@example.com",
-    password: "password",
-    name: "Admin User",
-    role: "admin" as UserRole,
-    avatar: "https://images.pexels.com/photos/2216607/pexels-photo-2216607.jpeg?auto=compress&cs=tinysrgb&w=100"
-  },
-  {
-    id: "3",
-    email: "principal@example.com",
-    password: "password",
-    name: "Principal User",
-    role: "principal" as UserRole,
-    avatar: "https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=100"
-  },
-  {
-    id: "4",
-    email: "employee@example.com",
-    password: "password",
-    name: "Employee User",
-    role: "employee" as UserRole,
-    avatar: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100"
-  }
-];
-
-// Initial auth state
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
-  isLoading: true
+  isLoading: true,
 };
 
-// Create the auth context
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) =>  Promise<{ success: boolean; message: string; data?: string }>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Auth provider component
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authState, setAuthState] = useState<AuthState>(initialState);
   const router = useRouter();
 
-  // Check if user is already logged in on mount
+  // Fetch user on mount if not already set
   useEffect(() => {
-    const storedUser = Cookies.get("user");
-    
-    if (storedUser) {
+    const fetchUser = async () => {
+      if (authState.user) {
+        setAuthState((prev) => ({ ...prev, isLoading: false }));
+        return;
+      }
+
       try {
-        const user = JSON.parse(storedUser) as User;
+        const res = await axios.get("/auth"); // sends cookie automatically
+        const user: User = res.data;
+
         setAuthState({
           user,
           isAuthenticated: true,
-          isLoading: false
+          isLoading: false,
         });
       } catch (error) {
-        console.error("Failed to parse stored user", error);
-        Cookies.remove("user");
-        setAuthState({...initialState, isLoading: false});
+        console.error("Auth check failed:", error);
+        setAuthState({ ...initialState, isLoading: false });
       }
-    } else {
-      setAuthState({...initialState, isLoading: false});
+    };
+
+    fetchUser();
+  }, [authState.user]);
+
+  
+ 
+  const login = async (email: string, password: string): Promise<{ success: boolean; message: string;data?:string;}> => {
+  try {
+    const res = await axios.post("/login", { email, password }, { withCredentials: true });
+
+    // Destructure custom response
+    const { success, message ,data} = res.data;
+    if (!success) {
+      return { success: false, message };
     }
-  }, []);
 
-  // Login function
-  const login = async (email: string, password: string): Promise<boolean> => {
-    // In a real app, you would make an API call to verify credentials
-    const user = MOCK_USERS.find(u => u.email === email && u.password === password);
-    
-    if (user) {
-			// Create a user object without the password
-			const { password: _, ...safeUser } = user;
-			console.log("user ", safeUser);
+    // Now get the logged-in user details
+    const meRes = await axios.get("/auth", { withCredentials: true });
+    const user: User = meRes.data;
 
-      // Store in state
-      setAuthState({
-        user: safeUser,
-        isAuthenticated: true,
-        isLoading: false
-      });
-      
-      // Store in cookie (7 days expiry)
-      Cookies.set("user", JSON.stringify(safeUser), { expires: 7 });
-      
-      return true;
-    }
-    
-    return false;
-  };
-
-  // Logout function
-  const logout = () => {
     setAuthState({
-      user: null,
-      isAuthenticated: false,
-      isLoading: false
+      user,
+      isAuthenticated: true,
+      isLoading: false,
     });
-    
-    Cookies.remove("user");
-    router.push("/login");
+
+    return { success: true, message,data };
+  } catch (error: any) {
+    const msg = error.response?.data?.message || "Something went wrong during login";
+    return { success: false, message: msg };
+  }
+};
+
+  const logout = async () => {
+    try {
+      await axios.post("/logout", {}, { withCredentials: true });
+
+      setAuthState({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+      });
+
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
@@ -128,15 +97,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-// Custom hook to use auth context
 export function useAuth() {
   const context = useContext(AuthContext);
-  
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
-  
   return context;
 }

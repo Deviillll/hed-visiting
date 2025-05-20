@@ -21,16 +21,7 @@ export default function RootLayout({
 			<body className={inter.className}>
 				<Providers>
 					{children}
-					<Toaster
-						position="top-center"
-						toastOptions={{
-							style: {
-								background: "hsl(var(--background))",
-								color: "hsl(var(--foreground))",
-								border: "1px solid hsl(var(--border))",
-							},
-						}}
-					/>
+					<Toaster position="top-right" richColors />
 				</Providers>
 			</body>
 		</html>

@@ -1,5 +1,5 @@
 "use client";
-
+import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,22 +20,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-import { useAuth } from "@/lib/auth-context";
-import axios from "axios";
-
 // Define the form schema
-const loginSchema = z.object({
+const registerSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z
     .string()
     .min(5, { message: "Password must be at least 5 characters" })
     .max(16, { message: "password can be maximun 16 characters" }),
+  name: z.string().min(3, { message: "name should be atleast 3 characters" }),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
-export function LoginForm() {
-  const { login } = useAuth();
+export function RegisterForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -45,81 +41,45 @@ export function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
       password: "",
+      name: "",
     },
+    //mode: "onChange", // Validate on change
+    reValidateMode: "onChange", // Re-validate on change
   });
 
-  // const onSubmit = async (data: LoginFormValues) => {
-  //   setIsLoading(true);
-  //   try {
-  //     const res = await axios.post("/api/login", {
-  //       email: data.email,
-  //       password: data.password,
-  //     });
-  //     const result = res.data;
-  //     const { success, statusCode, message } = result;
-
-  //     if (success && statusCode === 200) {
-  //       toast.success(`welcome ${result.data}`, {
-  //         description: message,
-  //         position: "top-right",
-  //         duration: 2000,
-  //       });
-  //       router.push("/dashboard");
-  //     }
-  //   } catch (error: any) {
-  //     toast.error("An error occurred", {
-  //       description: error.response?.data?.message || "Please try again later",
-  //     });
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
-
     try {
-      // Call the login function from AuthProvider
-      const result = await login(data.email, data.password);
+      const res = await axios.post("api/register", {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+      });
 
-      if (result?.success) {
-        toast.success(`Welcome ${result.data}`, {
-          description: result.message,
+      const result = res.data;
+
+      if (result.success && result.statusCode == 201) {
+        toast.success("Registration successful", {
+          description: "please check your email to verify your account",
           position: "top-right",
-          duration: 2000,
+          duration: 4000,
         });
-        router.push("/dashboard");
-      } else {
-        toast.error("Login failed", {
-          description: result?.message || "Invalid credentials",
-          position: "top-right",
-          duration: 2000,
-        });
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
       }
     } catch (error: any) {
       toast.error("An error occurred", {
         description: error.response?.data?.message || "Please try again later",
-        position: "top-right",
-        duration: 2000,
       });
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Demo accounts for easy testing
-  const demoAccounts = [
-    { role: "admin", email: "admin@gmail.com", password: "12345" },
-    { role: "principal", email: "principal@gmai.com", password: "12345" },
-    { role: "employee", email: "employee@gmail.com", password: "12345" },
-  ];
-
-  const handleDemoLogin = (email: string, password: string) => {
-    onSubmit({ email, password });
   };
 
   return (
@@ -133,14 +93,31 @@ export function LoginForm() {
         <Card className="w-full shadow-lg border border-border/50">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">
-              Login
+              Register
             </CardTitle>
             <CardDescription className="text-center">
-              Enter your credentials to access your dashboard
+              Enter your credentials to create an account
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="name">Name</Label>
+                </div>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="john doe"
+                  {...register("name")}
+                  className={errors.name ? "border-destructive" : ""}
+                />
+                {errors.name && (
+                  <p className="text-sm text-destructive">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="email">Email</Label>
@@ -186,28 +163,6 @@ export function LoginForm() {
                 )}
               </Button>
             </form>
-
-            <div className="mt-6">
-              <p className="text-sm text-center text-muted-foreground mb-3">
-                Demo Accounts
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                {demoAccounts.map((account) => (
-                  <Button
-                    key={account.role}
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      handleDemoLogin(account.email, account.password)
-                    }
-                    disabled={isLoading}
-                    className="text-xs"
-                  >
-                    {account.role}
-                  </Button>
-                ))}
-              </div>
-            </div>
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-xs text-muted-foreground text-center">

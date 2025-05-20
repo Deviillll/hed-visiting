@@ -31,10 +31,12 @@ const roleConfigs: Record<UserRole, { color: string; title: string }> = {
 
 export function DashboardHeader() {
   const { user } = useAuth();
+   if (!user) return null;
 
-  if (!user) return null;
-
+  if (!user.role) return null;
   const { color, title } = roleConfigs[user.role];
+
+
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 sm:px-6">

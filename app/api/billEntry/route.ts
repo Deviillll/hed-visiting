@@ -9,6 +9,7 @@ import Bill from '@/lib/models/billModel';
 import { getVerifiedUser } from '@/utils/token/jwtToken';
 import Rate from '@/lib/models/classRatesModel';
 import BillEntry from '@/lib/models/BillEntryModel';
+import User from '@/lib/models/userModel';
 
 
 
@@ -65,6 +66,14 @@ export const POST = withErrorHandler(
                 .sort({ effectiveFrom: -1 });
 
 
+                const existEmployee = await User.findById(employeeId)
+
+                if(!existEmployee || existEmployee.status==="inactive"){
+                    throw new HttpError("employee is inactive or not found",404)
+
+                }
+
+
             if (!userRate && !rate) {
                 throw new HttpError(`rate not found for employee ${employeeId}`, 404);
             }
@@ -81,6 +90,7 @@ export const POST = withErrorHandler(
                 });
                 await newRate.save();
             }
+
 
             // check if bill entry already exists
 

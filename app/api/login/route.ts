@@ -58,7 +58,7 @@ export const POST = withErrorHandler(
 
             const jsonUser = {
                 _id: userExist._id.toString(),
-                roleId: userExist.roleId.toString(),
+                name: userExist.name,
                 role: role.role,
             }
 
@@ -78,7 +78,7 @@ export const POST = withErrorHandler(
             });
 
             return NextResponse.json(
-                { message: "Login successful", status: 200, userName: userExist.name },
+                message("Login successful", 200, userExist.name),
                 {
                     status: 200,
                     // headers: {

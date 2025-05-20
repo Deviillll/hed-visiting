@@ -34,7 +34,7 @@ export default function BillDetailsPage({
 }: {
 	params: { id: string };
 }) {
-	const { isLoading } = useRoleProtection(["admin"]);
+	const { isLoading } = useRoleProtection(["admin","principal"]);
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const isEditMode = searchParams.get("mode") === "edit";

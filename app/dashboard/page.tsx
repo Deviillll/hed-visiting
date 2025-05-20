@@ -195,16 +195,16 @@ const calculateDashboardStats = (
 };
 
 export default function DashboardPage() {
-	const { user } = useAuth();
+	
 	const allUsers = useUserStore((state) => state.users);
 	const bills = useBillStore((state) => state.bills);
 
-	const stats = useMemo(() => {
-		if (!user) return [];
-		return calculateDashboardStats(user.role, allUsers, bills);
-	}, [user, allUsers, bills]);
+	// const stats = useMemo(() => {
+	// 	if (!user) return [];
+	// 	return calculateDashboardStats(user.role, allUsers, bills);
+	// }, [user, allUsers, bills]);
 
-	if (!user) return null;
+	// if (!user) return null;
 
 	const greetings = ["Good morning", "Good afternoon", "Good evening"][
 		Math.floor(new Date().getHours() / 8)
@@ -218,14 +218,14 @@ export default function DashboardPage() {
 				transition={{ duration: 0.5 }}
 			>
 				<h2 className="text-3xl font-bold tracking-tight">
-					{greetings}, {user.name}
+					{greetings}, {"User"}!
 				</h2>
 				<p className="text-muted-foreground">
 					Here's an overview of your dashboard
 				</p>
 			</motion.div>
 
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+			{/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 				{stats.map((stat, i) => (
 					<StatsCard
 						key={stat.title}
@@ -236,7 +236,7 @@ export default function DashboardPage() {
 						delay={i}
 					/>
 				))}
-			</div>
+			</div> */}
 
 			<div className="grid gap-4 md:grid-cols-2">
 				{/* Recent Activity */}

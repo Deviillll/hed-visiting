@@ -1,7 +1,6 @@
 import { jwtVerify, SignJWT } from 'jose';
 import { v4 as uuidv4 } from 'uuid';
 
- // e.g., 'fdda765f-fc57-5604-a269-52a7df8164ec'
 
 import { cookies } from 'next/headers';
 
@@ -10,12 +9,12 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const encoder = new TextEncoder();
 const secret = encoder.encode(JWT_SECRET);
 
-export async function generateToken({ _id, roleId,role }: { _id: string; roleId: string ;role:string},) {
-  return await new SignJWT({ _id, roleId,role })
-  .setProtectedHeader({ alg: 'HS256' })
-  .setIssuedAt()
-  .setExpirationTime('3d') 
-  .sign(secret);
+export async function generateToken({ _id, name, role }: { _id: string; name: string; role: string }) {
+  return await new SignJWT({ _id, name, role })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('3d')
+    .sign(secret);
 }
 
 
@@ -29,7 +28,7 @@ export async function getVerifiedUser() {
   
   try {
     const { payload } = await jwtVerify(token, secret);
-    return payload as { _id: string; roleId: string; role: string; iat: number; exp: number };
+    return payload as { _id: string; name: string; role: string; iat: number; exp: number };
   } catch (err) {
     throw new Error(err as any );
   }

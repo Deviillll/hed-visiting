@@ -118,7 +118,7 @@ const columns = [
 
 export default function AdminsPage() {
   // Only allow superadmin to access this page
-  const { isLoading } = useRoleProtection(["superadmin"]);
+  const { isLoading } = useRoleProtection(["superadmin","principal","admin"]);
 
   if (isLoading) {
     return (
