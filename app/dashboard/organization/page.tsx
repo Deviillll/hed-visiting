@@ -1,5 +1,6 @@
 "use client";
 
+import { InstituteForm } from "@/components/Institute-form";
 import { useRoleProtection } from "@/lib/auth-utils";
 import { Loader2, UserCircle, Shield } from "lucide-react";
 
@@ -23,7 +24,7 @@ export default function organizationPage() {
 
   return (
     <div className="">
-        <h1>Organization Page</h1>
+        <InstituteForm />
  
     </div>
   );

@@ -22,6 +22,11 @@ export const POST = withErrorHandler(
             }
             await connectDb()
             const { name, email, contact, address, logo, description, website } = await req.json()
+            // validation 
+            if(!name || !email || !contact || !address || !logo) {
+                throw new HttpError("name ,email, contact, address and logo is required", 400);
+            }
+
             const instituteExists = await Institute.findOne({
                 userId
             });
