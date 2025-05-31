@@ -80,3 +80,81 @@ export const POST = withErrorHandler(
     }
 )
 
+
+export const GET = withErrorHandler(
+    async (req) => {
+
+        try {
+
+            const decoded = await getVerifiedUser();
+            const userId = decoded._id;
+            const role = decoded.role;
+            // if (role !== "principal" && role !== "superadmin") {
+            //     throw new HttpError("Unauthorized", 401);
+            // }
+            await connectDb()
+            const institute = await Institute.findOne({
+                userId
+            });
+            if (!institute) {
+                throw new HttpError("Institute not found", 404);
+            }
+
+            return NextResponse.json(message("Institute fetched successfully", 200, institute), { status: 200 });
+
+        } catch (error: any) {
+            throw new HttpError(error.message, error.status || 500);
+        }
+
+    }
+)
+
+
+// patch
+
+export const PUT = withErrorHandler(
+    async (req) => {
+
+        try {
+
+            const decoded = await getVerifiedUser();
+            const userId = decoded._id;
+            const role = decoded.role;
+            if (role !== "principal" && role !== "superadmin") {
+                throw new HttpError("Unauthorized", 401);
+            }
+            await connectDb()
+            const { name, email, contact, address, logo, description, website } = await req.json()
+            // validation 
+            if(!name || !email || !contact || !address || !logo) {
+                throw new HttpError("name ,email, contact, address and logo is required", 400);
+            }
+
+            const institute = await Institute.findOne({
+                userId
+            });
+            if (!institute) {
+                throw new HttpError("Institute not found", 404);
+            }
+
+            institute.name = name;
+            institute.email = email;
+            institute.contact = contact;
+            institute.address = address;
+            institute.logo = logo;
+            institute.description = description;
+            institute.website = website;
+
+            const updatedInstitute = await institute.save();
+            if (!updatedInstitute) {
+                throw new HttpError("Institute update failed", 500);
+            }
+
+            return NextResponse.json(message("Institute updated successfully", 200), { status: 200 });
+
+        } catch (error: any) {
+            throw new HttpError(error.message, error.status || 500);
+        }
+
+    }
+)

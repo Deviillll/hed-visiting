@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -46,6 +46,7 @@ export function InstituteForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [logoError, setLogoError] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [instituteExists, setInstituteExists] = useState(false);
 
   const {
     register,
@@ -66,29 +67,73 @@ export function InstituteForm() {
     //reValidateMode: "onChange",
   });
 
+  // fetch institute data if its already created
+  useEffect(() => {
+    const fetchInstituteData = async () => {
+      try {
+        const res = await axios.get("/institute");
+
+        if (res.data.success && res.data.statusCode === 200) {
+          setInstituteExists(true);
+          const instituteData = res.data.data;
+          setValue("name", instituteData.name);
+          setValue("email", instituteData.email);
+          setValue("address", instituteData.address);
+          setValue("contact", instituteData.contact);
+          setValue("logo", instituteData.logo);
+          setValue("website", instituteData.website);
+          setValue("description", instituteData.description);
+          setSelectedFile(instituteData.logo); // Reset selected file if data is fetched
+        }
+      } catch (error: any) {
+        if (error?.response?.status === 404) {
+          // No record found – do nothing
+          return;
+        }
+        // Handle or log other errors if needed
+        console.error("Failed to fetch institute data:", error);
+      }
+    };
+
+    fetchInstituteData();
+  }, []);
+
   const onSubmit = async (data: InstituteFormValues) => {
     setIsLoading(true);
     try {
       // Upload logo only if a file was selected
-      console.log(selectedFile);
+
       if (selectedFile) {
         const logoUrl = await uploadImageToCloudinary(selectedFile);
+
         setValue("logo", logoUrl);
 
         data.logo = logoUrl;
       } else {
         throw new Error("Logo file is required");
       }
+      if (instituteExists) {
+        const res = await axios.put("/institute", data);
 
-      const res = await axios.post("/institute", data);
+        if (res.data.success && res.data.statusCode === 200) {
+          toast.success("Profile updated successfully", {
+            description: res.data.message,
+            position: "top-right",
+            duration: 4000,
+          });
+          router.push("/dashboard");
+        }
+      } else {
+        const res = await axios.post("/institute", data);
 
-      if (res.data.success && res.data.statusCode === 201) {
-        toast.success("Profile created successfully", {
-          description: res.data.message,
-          position: "top-right",
-          duration: 4000,
-        });
-        router.push("/dashboard");
+        if (res.data.success && res.data.statusCode === 201) {
+          toast.success("Profile created successfully", {
+            description: res.data.message,
+            position: "top-right",
+            duration: 4000,
+          });
+          router.push("/dashboard");
+        }
       }
     } catch (error: any) {
       console.log(error);
@@ -229,7 +274,11 @@ export function InstituteForm() {
 
               {selectedFile && (
                 <img
-                  src={URL.createObjectURL(selectedFile)}
+                  src={
+                    selectedFile instanceof File
+                      ? URL.createObjectURL(selectedFile)
+                      : selectedFile
+                  }
                   alt="Preview"
                   className="h-10 w-10 mt-2 rounded"
                 />
@@ -241,8 +290,10 @@ export function InstituteForm() {
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> creating....
                 </>
+              ) : instituteExists ? (
+                "Update Profile"
               ) : (
-                "Create Organization"
+                "Create Profile"
               )}
             </Button>
           </form>
