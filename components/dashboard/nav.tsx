@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { UserCircle, Home, Users, Building2, Briefcase, Settings, LogOut, FileText,Grid  } from "lucide-react";
+import { UserCircle, Home, Users, Building2, Briefcase, Settings, LogOut, FileText,Grid,Backpack   } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
@@ -68,6 +68,12 @@ const getNavItems = (role: string) => {
         name: "Departments",
         href: "/dashboard/departments",
         icon: Grid,
+        roles: ["superadmin", "admin", "principal"],
+      },
+      {
+        name: "Classes",
+        href: "/dashboard/classes",
+        icon: Backpack ,
         roles: ["superadmin", "admin", "principal"],
       }
     );

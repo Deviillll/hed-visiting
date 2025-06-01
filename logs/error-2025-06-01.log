@@ -1,0 +1,13 @@
+{"message":"[GET http://localhost:3000/api/class] Cannot populate path `updatedBy` because it is not in your schema. Set the `strictPopulate` option to false to override.","timestamp":"01/06/2025, 3:09 pm"}
+{"message":"[GET http://localhost:3000/api/class] Cannot populate path `updatedBy` because it is not in your schema. Set the `strictPopulate` option to false to override.","timestamp":"01/06/2025, 3:09 pm"}
+{"message":"[GET http://localhost:3000/api/class] Schema hasn't been registered for model \"User\".\nUse mongoose.model(name, schema)","timestamp":"01/06/2025, 3:19 pm"}
+{"message":"[GET http://localhost:3000/api/class] Schema hasn't been registered for model \"User\".\nUse mongoose.model(name, schema)","timestamp":"01/06/2025, 3:20 pm"}
+{"message":"[GET http://localhost:3000/api/class] Schema hasn't been registered for model \"User\".\nUse mongoose.model(name, schema)","timestamp":"01/06/2025, 3:21 pm"}
+{"message":"[GET http://localhost:3000/api/class] Schema hasn't been registered for model \"User\".\nUse mongoose.model(name, schema)","timestamp":"01/06/2025, 3:21 pm"}
+{"message":"[GET http://localhost:3000/api/class] Schema hasn't been registered for model \"User\".\nUse mongoose.model(name, schema)","timestamp":"01/06/2025, 3:22 pm"}
+{"message":"[GET http://localhost:3000/api/class] Schema hasn't been registered for model \"User\".\nUse mongoose.model(name, schema)","timestamp":"01/06/2025, 3:27 pm"}
+{"message":"[GET http://localhost:3000/api/class] Schema hasn't been registered for model \"User\".\nUse mongoose.model(name, schema)","timestamp":"01/06/2025, 3:31 pm"}
+{"message":"[GET http://localhost:3000/api/class] Schema hasn't been registered for model \"name\".\nUse mongoose.model(name, schema)","timestamp":"01/06/2025, 3:32 pm"}
+{"message":"[GET http://localhost:3000/api/class] Schema hasn't been registered for model \"name\".\nUse mongoose.model(name, schema)","timestamp":"01/06/2025, 3:33 pm"}
+{"message":"[GET http://localhost:3000/api/class] Schema hasn't been registered for model \"User\".\nUse mongoose.model(name, schema)","timestamp":"01/06/2025, 3:33 pm"}
+{"message":"[GET http://localhost:3000/api/class] Schema hasn't been registered for model \"User\".\nUse mongoose.model(name, schema)","timestamp":"01/06/2025, 3:35 pm"}

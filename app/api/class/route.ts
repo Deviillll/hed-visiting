@@ -3,6 +3,7 @@ import message from '@/globalHandler/customMessage';
 import { withErrorHandler } from '@/globalHandler/errorHandler';
 import { HttpError } from '@/globalHandler/httpError';
 import connectDb from '@/lib/db'
+
 import Class from '@/lib/models/classModel'
 import Resolver from '@/lib/models/resolverModel';
 import { getVerifiedUser } from '@/utils/token/jwtToken';
@@ -38,7 +39,9 @@ export const POST = withErrorHandler(
             }
 
 
-            const newClass = await Class.create({ name, instituteId: havePermission.institute_id, createdBy: userId });
+            const newClass = await Class.create({ name, instituteId: havePermission.institute_id, createdBy: userId 
+             
+            });
             if (!newClass) {
                 throw new HttpError("Class creation failed", 500);
             }
@@ -50,4 +53,27 @@ export const POST = withErrorHandler(
 
     }
 )
+
+export const GET = withErrorHandler(
+    async (req) => {
+        try {
+            const decoded = await getVerifiedUser();
+            const userId = decoded._id;
+            const role = decoded.role;
+            if (role !== "principal" && role !== "admin") {
+                throw new HttpError("Unauthorized", 401);
+            }
+
+            await connectDb()
+            const havePermission = await Resolver.findOne({ user_id: userId });
+
+
+            const classes = await Class.find({ instituteId: havePermission.institute_id }).populate("createdBy","name").populate("updatedBy","name").sort({ createdAt: -1 });
+            return NextResponse.json(classes, { status: 200 });
+        } catch (error: any) {
+            throw new HttpError(error.message, error.status || 500);
+        }
+    }
+)
+
 
