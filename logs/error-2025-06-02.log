@@ -1,0 +1,2 @@
+{"message":"[GET http://localhost:3000/api/admin] Invalid $project :: caused by :: Cannot do exclusion on field password in inclusion projection","timestamp":"02/06/2025, 11:12 am"}
+{"message":"[GET http://localhost:3000/api/admin] Invalid $project :: caused by :: Cannot do exclusion on field password in inclusion projection","timestamp":"02/06/2025, 11:19 am"}

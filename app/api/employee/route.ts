@@ -12,6 +12,7 @@ import VerificationToken from '@/lib/models/verifyTokenModel'
 import Resolver from '@/lib/models/resolverModel';
 import Rate from '@/lib/models/classRatesModel';
 import { generateRandomString, getVerifiedUser } from '@/utils/token/jwtToken';
+import Department from '@/lib/models/departmentModel';
 
 
 export const POST = withErrorHandler(
@@ -88,6 +89,9 @@ export const POST = withErrorHandler(
                 await Rate.insertMany(rateDocs);
             };
 
+            const departmentExist= await Department.findOne({ _id: department, instituteId: resolver.institute_id });
+           
+
 
 
             // new user creation
@@ -100,6 +104,11 @@ export const POST = withErrorHandler(
                     department,
                     instituteId: resolver.institute_id,
                 });
+                 if (departmentExist) {
+                    departmentExist.totalEmployees += 1;
+                    await departmentExist.save();
+                
+            }
                 await VerificationToken.create({
                     token,
                     userId: newUser._id,
@@ -128,6 +137,11 @@ export const POST = withErrorHandler(
                 existingUser.department = department;
                 existingUser.instituteId = resolver.institute_id;
                 await existingUser.save();
+                     if (departmentExist) {
+                    departmentExist.totalEmployees += 1;
+                    await departmentExist.save();
+                
+            }
                 const previousUserToken = await VerificationToken.findOne({
                     userId: existingUser._id,
                 });

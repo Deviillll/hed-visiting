@@ -20,10 +20,11 @@ import {
 import { useState } from "react";
 
 interface Column<T> {
-	key: keyof T | "actions";
-	title: string;
-	render?: (value: any, item: T) => React.ReactNode;
+  key: keyof T | "actions" | "custom" |"department";
+  title: string;
+  render?: (value: any, item: T) => React.ReactNode;
 }
+
 
 interface DataTableProps<T> {
 	data: T[];
@@ -64,7 +65,7 @@ export function DataTable<T>({
 					<TableHeader>
 						<TableRow>
 							{columns.map((column) => (
-								<TableHead key={String(column.key)}>{column.title}</TableHead>
+								<TableHead key={String(column.key)} className="">{column.title}</TableHead>
 							))}
 						</TableRow>
 					</TableHeader>
