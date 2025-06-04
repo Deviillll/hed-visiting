@@ -30,12 +30,12 @@ const getNavItems = (role: string) => {
   ];
 
   // Admins page for superadmin and principal
-  if (["superadmin", "principal"].includes(role)) {
+  if (["superadmin", "principal","admin"].includes(role)) {
     items.push({
       name: "Admins",
       href: "/dashboard/admins",
       icon: Users,
-      roles: ["superadmin", "principal"],
+      roles: ["superadmin", "principal","admin"],
     });
   }
 

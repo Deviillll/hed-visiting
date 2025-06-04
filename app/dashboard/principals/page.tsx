@@ -258,6 +258,7 @@ const employeeColumns = [
 ];
 
 export default function PrincipalsPage() {
+	
 	const { isLoading } = useRoleProtection(["principal"]);
 	const { employees, updateEmployeeRates } = useEmployeeStore();
 	const { addUser } = useUserStore();

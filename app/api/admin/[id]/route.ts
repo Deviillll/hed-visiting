@@ -12,7 +12,7 @@ export const PUT = withErrorHandler(
     try {
       const { id } = await params;
       if (!id) {
-        throw new HttpError("Department ID is required", 400);
+        throw new HttpError("user ID is required", 400);
       }
       const decoded = await getVerifiedUser();
       const userId = decoded._id;
@@ -27,9 +27,10 @@ export const PUT = withErrorHandler(
       const haveDataEntryRights = havePermission?.allowDataEntry;
 
       if (!havePermission || !haveDataEntryRights) {
-        throw new HttpError("You don't have permission to view departments", 403);
+        throw new HttpError("You don't have permission", 403);
       }
-      const { name, email, department, resolverPermissions } = await req.json();
+      const { name, email, departmentId, canAddEmployee, allowVerification, allowDataEntry,allowBilling,allowDeletion,canCreateAdmin } = await req.json();
+      
 
       const user = await User.findOne({ instituteId: havePermission.institute_id, _id: id });
       if (!user) {
@@ -37,7 +38,7 @@ export const PUT = withErrorHandler(
       }
       if (name) user.name = name;
       if (email) user.email = email;
-      if (department) user.department = department;
+      if (departmentId) user.department = departmentId;
 
       await user.save();
 
@@ -50,6 +51,14 @@ export const PUT = withErrorHandler(
           { new: true, upsert: false } // return updated doc, don't create new if missing
         );
       };
+      const resolverPermissions: any = {};
+      if (canAddEmployee !== undefined) resolverPermissions.canAddEmployee = canAddEmployee;
+      if (allowVerification !== undefined) resolverPermissions.allowVerification = allowVerification;
+      if (allowDataEntry !== undefined) resolverPermissions.allowDataEntry = allowDataEntry;
+      if (allowBilling !== undefined) resolverPermissions.allowBilling = allowBilling;
+      if (allowDeletion !== undefined) resolverPermissions.allowDeletion = allowDeletion;
+      if (canCreateAdmin !== undefined) resolverPermissions.canCreateAdmin = canCreateAdmin;
+      // Update resolver permissions if any permission is provided
 
       if (resolverPermissions) {
         await updateResolverPermissions(id, resolverPermissions);
@@ -106,8 +115,9 @@ export const DELETE = withErrorHandler(
 export const PATCH = withErrorHandler(
   async (req, { params }) => {
     try {
-      const { id } = params;
-      if (!id) throw new HttpError("Department ID is required", 400);
+      const { id } = await params;
+
+      if (!id) throw new HttpError("user ID is required", 400);
 
       const decoded = await getVerifiedUser();
       const userId = decoded._id;
@@ -128,20 +138,20 @@ export const PATCH = withErrorHandler(
 
       const { isActive } = await req.json();
 
-      const department = await Department.findOne({
+      const user = await User.findOne({
         instituteId: havePermission.institute_id,
         _id: id,
       });
 
-      if (!department) {
-        throw new HttpError("Department not found", 404);
+      if (!user) {
+        throw new HttpError("user not found", 404);
       }
 
-      department.isActive = isActive;
-      await department.save();
+      user.status = isActive;
+      await user.save();
 
       return NextResponse.json(
-        { message: "Department updated successfully" },
+        { message: "user updated successfully" },
         { status: 200 }
       );
 

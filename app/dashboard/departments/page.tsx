@@ -14,6 +14,7 @@ export default function DepartmentsPage() {
   const { isLoading } = useRoleProtection(["superadmin", "admin", "principal"]);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState(true);
+  console.log("Rendering DepartmentsPage");
 
   // ✅ Fetch departments on load
   const fetchDepartments = async () => {

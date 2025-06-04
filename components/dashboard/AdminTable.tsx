@@ -25,7 +25,7 @@ function AdminTableComponent({
 
   const handleDelete = useCallback(
     (admin: Admin) => {
-      if (confirm(`Delete admin "${admin.name}"?`)) {
+      if (confirm(`Are you sure you want to delete "${admin.name}"?`)) {
         onDelete(admin.id);
       }
     },

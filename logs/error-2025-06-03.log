@@ -1,0 +1,2 @@
+{"message":"[PATCH http://localhost:3000/api/admin/683da7ce716b5113f604205b] User validation failed: status: `false` is not a valid enum value for path `status`.","timestamp":"03/06/2025, 11:07 am"}
+{"message":"[POST http://localhost:3000/api/employee] name , email , password and role is required","timestamp":"03/06/2025, 11:25 pm"}

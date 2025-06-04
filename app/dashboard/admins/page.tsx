@@ -51,9 +51,10 @@ export default function AdminsPage() {
   // useCallback to memoize handlers to prevent unnecessary re-renders downstream
   const handleUpdate = useCallback(
     async (
-      data: Partial<Admin> & { password?: string; departmentId?: string }
+      data: Partial<Admin> & { password?: string; }
     ) => {
       try {
+        
         if (data.id) {
           // update
           await axios.put(`/admin/${data.id}`, data);
@@ -102,12 +103,12 @@ export default function AdminsPage() {
   const handleStatusToggle = useCallback(
     async (dept: Admin) => {
       try {
-        await axios.patch(`/department/${dept.id}`, {
-          isActive: dept.status === "Active" ? false : true,
+        await axios.patch(`/admin/${dept.id}`, {
+          status: dept.status === "Active" ? "Inactive" : "Active",
         });
         toast.success(
-          `Department marked as ${
-            dept.status === "Active" ? "Inactive" : "Active"
+          `Admin marked as ${
+            dept.status === "Active" ? "inactive" : "active"
           }`
         );
         await fetchAdmins();

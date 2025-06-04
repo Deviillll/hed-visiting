@@ -1,3 +1,4 @@
+
 import message from '@/globalHandler/customMessage';
 import { withErrorHandler } from '@/globalHandler/errorHandler';
 import { HttpError } from '@/globalHandler/httpError';
@@ -32,30 +33,28 @@ export const POST = withErrorHandler(
             if (!resolver) {
                 throw new HttpError("Unauthorized | Resolver not found", 404);
             }
-            const { canAddEmployee, canCreateAdmin } = resolver;
+            const { canAddEmployee } = resolver;
 
 
-            const { name, email, password, department, roleId, resolverPermissions, rateDetails } = await req.json()
+            const { name, email, password, departmentId, rates, position } = await req.json()
 
-            if (!name || !email || !password || !roleId) {
+            if (!name || !email || !password) {
                 throw new HttpError("name , email , password and role is required", 400);
             }
 
-            const definerole = await Role.findById(roleId);
+            const definerole = await Role.findOne({ role: "employee" });
             if (!definerole) {
                 throw new HttpError("Role not found", 404);
             }
-            if (definerole.role !== "employee" && definerole.role !== "admin") {
-                throw new HttpError("Role not authorized", 404);
-            }
 
-            if (definerole.role === "employee" && !canAddEmployee) {
+            if (!canAddEmployee) {
                 throw new HttpError("Unauthorized | You don't have permission to add employees", 403);
             }
 
-            if (definerole.role === "admin" && !canCreateAdmin) {
-                throw new HttpError("Unauthorized | You don't have permission to add admins", 403);
-            }
+
+
+          
+
 
             const lowerCaseEmail = email.toLowerCase();
 
@@ -66,20 +65,13 @@ export const POST = withErrorHandler(
             // generate random token
             const token = generateRandomString();
 
-            const createResolverForAdmin = async (userId: string, instituteId: string, permissions: object) => {
-                if (!permissions) return;
-                await Resolver.create({
-                    user_id: userId,
-                    institute_id: instituteId,
-                    ...permissions,
-                });
-            };
+         
 
 
-            const createRatesForEmployee = async (employeeId: string, rateDetails: any[]) => {
-                if (!Array.isArray(rateDetails) || rateDetails.length === 0) return;
+            const createRatesForEmployee = async (employeeId: string, rates: any[]) => {
+                if (!Array.isArray(rates) || rates.length === 0) return;
 
-                const rateDocs = rateDetails.map(detail => ({
+                const rateDocs = rates.map(detail => ({
                     employeeId,
                     classId: detail.classId,
                     rate: detail.rate,
@@ -89,8 +81,8 @@ export const POST = withErrorHandler(
                 await Rate.insertMany(rateDocs);
             };
 
-            const departmentExist= await Department.findOne({ _id: department, instituteId: resolver.institute_id });
-           
+            const departmentExist = await Department.findOne({ _id: departmentId, instituteId: resolver.institute_id });
+
 
 
 
@@ -101,26 +93,23 @@ export const POST = withErrorHandler(
                     roleId: definerole._id,
                     password: hashedPassword,
                     name,
-                    department,
+                    department: departmentId,
                     instituteId: resolver.institute_id,
+                    position,
                 });
-                 if (departmentExist) {
+                if (departmentExist) {
                     departmentExist.totalEmployees += 1;
                     await departmentExist.save();
-                
-            }
+
+                }
                 await VerificationToken.create({
                     token,
                     userId: newUser._id,
                     expiry: Date.now() + 3600000,
                 });
-                if (definerole.role === "admin") {
-                    await createResolverForAdmin(newUser._id, resolver.institute_id, resolverPermissions);
-                }
 
-                if (definerole.role === "employee") {
-                    await createRatesForEmployee(newUser._id, rateDetails);
-                }
+                await createRatesForEmployee(newUser._id, rates);
+
 
                 //await sendEmail(name, email, token, "verification");
 
@@ -134,14 +123,15 @@ export const POST = withErrorHandler(
                 existingUser.roleId = definerole._id;
                 existingUser.name = name;
                 existingUser.isVerified = false;
-                existingUser.department = department;
+                existingUser.department = departmentId;
                 existingUser.instituteId = resolver.institute_id;
+                existingUser.position = position;
                 await existingUser.save();
-                     if (departmentExist) {
+                if (departmentExist) {
                     departmentExist.totalEmployees += 1;
                     await departmentExist.save();
-                
-            }
+
+                }
                 const previousUserToken = await VerificationToken.findOne({
                     userId: existingUser._id,
                 });
@@ -157,13 +147,11 @@ export const POST = withErrorHandler(
                         expiry: Date.now() + 3600000,
                     });
                 }
-                if (definerole.role === "admin") {
-                    await createResolverForAdmin(existingUser._id, resolver.institute_id, resolverPermissions);
-                }
 
-                if (definerole.role === "employee") {
-                    await createRatesForEmployee(existingUser._id, rateDetails);
-                }
+
+
+                await createRatesForEmployee(existingUser._id, rates);
+
 
 
 
@@ -180,3 +168,131 @@ export const POST = withErrorHandler(
     }
 )
 
+export const GET = withErrorHandler(
+    async (req) => {
+        try {
+            const decoded = await getVerifiedUser();
+            const userId = decoded._id;
+            const role = decoded.role;
+            if (role === "employee") {
+                throw new HttpError("Unauthorized", 401);
+            }
+
+            await connectDb()
+
+            const resolver = await Resolver.findOne({ user_id: userId });
+            if (!resolver) {
+                throw new HttpError("Unauthorized | Resolver not found", 404);
+            }
+
+
+
+
+
+           const employees = await User.aggregate([
+  {
+    $match: {
+      instituteId: resolver.institute_id,
+      isDeleted: false
+    }
+  },
+  {
+    $lookup: {
+      from: 'roles',
+      localField: 'roleId',
+      foreignField: '_id',
+      as: 'Role'
+    }
+  },
+  {
+    $unwind: '$Role'
+  },
+  {
+    $match: {
+      'Role.role': 'employee'
+    }
+  },
+  {
+    $lookup: {
+      from: 'departments',
+      localField: 'department',
+      foreignField: '_id',
+      as: 'department'
+    }
+  },
+  {
+    $unwind: { path: '$department', preserveNullAndEmptyArrays: true }
+  },
+
+  // ✅ Lookup latest rates per class for each employee
+  {
+    $lookup: {
+      from: 'rates',
+      let: { userId: '$_id' },
+      pipeline: [
+        {
+          $match: {
+            $expr: { $eq: ['$employeeId', '$$userId'] }
+          }
+        },
+        {
+          $sort: {
+            classId: 1,
+            effectiveFrom: -1 // latest rate first
+          }
+        },
+        {
+          $group: {
+            _id: '$classId', // group by class
+            rateDocId: { $first: '$_id' }, // keep Rate document _id
+            classId: { $first: '$classId' },
+            rate: { $first: '$rate' },
+            effectiveFrom: { $first: '$effectiveFrom' },
+            createdAt: { $first: '$createdAt' }
+          }
+        }
+      ],
+      as: 'rates'
+    }
+  },
+
+  // ✅ Final projection
+  {
+    $project: {
+      _id: 1,
+      name: 1,
+      email: 1,
+      status: 1,
+      position: 1,
+      department: {
+        _id: '$department._id',
+        name: '$department.name',
+        code: '$department.code'
+      },
+      rates: {
+        $map: {
+          input: '$rates',
+          as: 'rate',
+          in: {
+            _id: '$$rate.rateDocId', // Real Rate document ID
+            classId: '$$rate.classId',
+            rate: '$$rate.rate',
+            effectiveFrom: '$$rate.effectiveFrom',
+            createdAt: '$$rate.createdAt'
+          }
+        }
+      }
+    }
+  }
+]);
+
+
+
+
+
+            return NextResponse.json(employees, { status: 200 });
+
+        } catch (error: any) {
+            throw new HttpError(error.message, error.status || 500);
+        }
+    })
