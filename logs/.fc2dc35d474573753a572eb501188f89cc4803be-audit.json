@@ -6,11 +6,6 @@
     "auditLog": "D:\\clg project\\hed-next-visiting\\logs\\.fc2dc35d474573753a572eb501188f89cc4803be-audit.json",
     "files": [
         {
-            "date": 1747809074170,
-            "name": "D:\\clg project\\hed-next-visiting\\logs\\error-2025-05-21.log",
-            "hash": "dac1f6c8f9093e4b7eda61753538f183deb9a8ae965accdc715dc1e06f3c7f6e"
-        },
-        {
             "date": 1748677137017,
             "name": "D:\\clg project\\hed-next-visiting\\logs\\error-2025-05-31.log",
             "hash": "d17d300b93f9263b2e0cb15ba5f5db18db0bf0ba1fbbbdfed09f174976b7032f"
@@ -34,6 +29,21 @@
             "date": 1748977241399,
             "name": "D:\\clg project\\hed-next-visiting\\logs\\error-2025-06-04.log",
             "hash": "d17b2c0e59076d59bce832b25a47f970290c03bcbfe407ae428728f34840b03d"
+        },
+        {
+            "date": 1749534169194,
+            "name": "D:\\clg project\\hed-next-visiting\\logs\\error-2025-06-10.log",
+            "hash": "0951b5b2ba6a02df4d8fd3a7e1533f0021c486af30d98cd90231bdce1d3c2960"
+        },
+        {
+            "date": 1749617524779,
+            "name": "D:\\clg project\\hed-next-visiting\\logs\\error-2025-06-11.log",
+            "hash": "6dfdbf01ff4606f5f3621ffd3414a00dfb6e34baed09d82ae3e0b6ddc24446d1"
+        },
+        {
+            "date": 1749710254212,
+            "name": "D:\\clg project\\hed-next-visiting\\logs\\error-2025-06-12.log",
+            "hash": "41b8392fd6a3625096d77a62dd120fbf041487d2b5e879f1c92323c918aab591"
         }
     ],
     "hashType": "sha256"

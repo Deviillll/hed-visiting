@@ -2,10 +2,11 @@ import { create } from "zustand";
 
 export type BillStatus =
 	| "draft"
-	| "pending_level2"
-	| "pending_principal"
+	| "pending"
 	| "approved"
-	| "rejected";
+	| "pass"
+	| "fail"
+	| "verification";
 
 export interface Bill {
 	id: string;

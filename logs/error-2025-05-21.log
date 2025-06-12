@@ -1,2 +1,0 @@
-{"message":"[POST http://localhost:3000/api/institute] Institute validation failed: description: Path `description` is required.","timestamp":"21/05/2025, 11:14 pm"}
-{"message":"[POST http://localhost:3000/api/institute] Institute validation failed: description: Path `description` is required.","timestamp":"21/05/2025, 11:17 pm"}

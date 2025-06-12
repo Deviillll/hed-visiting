@@ -1,0 +1,5 @@
+{"message":"[GET http://localhost:3000/api/bill/6847cd1d53371f56ecab2a9d] Operation `resolvers.findOne()` buffering timed out after 10000ms","timestamp":"11/06/2025, 11:14 am"}
+{"message":"[GET http://localhost:3000/api/bill/employee] Cast to ObjectId failed for value \"employee\" (type string) at path \"_id\" for model \"Bill\"","timestamp":"11/06/2025, 12:44 pm"}
+{"message":"[POST http://localhost:3000/api/billEntry?billId=6847cf5b53371f56ecab2aa9] Employee userId is required","timestamp":"11/06/2025, 4:59 pm"}
+{"message":"[POST http://localhost:3000/api/billEntry?billId=6847cf5b53371f56ecab2aa9] Employee userId is required","timestamp":"11/06/2025, 5:00 pm"}
+{"message":"[POST http://localhost:3000/api/billEntry?billId=6847cf5b53371f56ecab2aa9] Bill entry already exists for employee 683ff7be53371f56ecab2912 with class 683f09f61385fccb40be8409","timestamp":"11/06/2025, 5:03 pm"}

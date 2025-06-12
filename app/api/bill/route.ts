@@ -70,3 +70,49 @@ export const POST = withErrorHandler(
     }
 )
 
+
+// get all bills
+
+export const GET = withErrorHandler(
+    async (req) => {
+
+        try {
+            const decoded = await getVerifiedUser();
+            const userId = decoded._id;
+            const role = decoded.role;
+
+            if (role === "employee") {
+                throw new HttpError("Unauthorized", 401);
+            }
+
+            await connectDb()
+
+            const resolver = await Resolver.findOne({ user_id: userId });
+            if (!resolver) {
+                throw new HttpError("Unauthorized | Resolver not found", 404);
+            }
+            const { allowBilling, allowVerification } = resolver;
+            if (!allowBilling || !allowVerification) {
+                throw new HttpError("Unauthorized | You don't have permission to view bills", 403);
+            }
+
+
+            const bills = await Bill.find().sort({ createdAt: -1 });
+
+            if (!bills || bills.length === 0) {
+                throw new HttpError("No bill found", 404);
+            }
+            
+         
+            return NextResponse.json(message("Bill created successfully", 201, bills), {
+                status: 201,
+            });
+
+
+
+        } catch (error: any) {
+            throw new HttpError(error.message, error.status || 500);
+        }
+    }
+)
+
