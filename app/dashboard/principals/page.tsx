@@ -298,11 +298,7 @@ export default function PrincipalsPage() {
 			return;
 		}
 
-		addUser({
-			...createFormData,
-			role: "employee",
-			//avatar:"https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=100",
-		});
+		
 
 		toast.success("Employee created successfully");
 		setIsCreateDialogOpen(false);
