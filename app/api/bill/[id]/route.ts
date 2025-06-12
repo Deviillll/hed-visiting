@@ -11,9 +11,10 @@ import { NextResponse } from "next/server";
 // get single bill
 
 export const GET = withErrorHandler(
-    async (req, { params }) => {
+    async (req, context) => {
         try {
-            const { id } = params;
+               const { params } = context;  
+    const id = await params.id;
             if (!id) {
                 throw new HttpError("bill ID is required", 400);
             }

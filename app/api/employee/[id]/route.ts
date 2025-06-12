@@ -10,9 +10,10 @@ import { NextResponse } from "next/server";
 
 
 
-export const PUT = withErrorHandler(async (req, { params }) => {
+export const PUT = withErrorHandler(async (req, context) => {
   try {
-    const { id } =  params;
+       const { params } = context;  
+    const id = await params.id;
     if (!id) {
       throw new HttpError("user ID is required", 400);
     }
@@ -100,9 +101,10 @@ export const PUT = withErrorHandler(async (req, { params }) => {
 });
 
 export const DELETE = withErrorHandler(
-  async (req, { params }) => {
+  async (req, context) => {
     try {
-      const { id } =  params;
+         const { params } = context;  
+    const id = await params.id;
       if (!id) {
         throw new HttpError("user ID is required", 400);
       }
@@ -136,9 +138,10 @@ export const DELETE = withErrorHandler(
   }
 )
 export const PATCH = withErrorHandler(
-  async (req, { params }) => {
+  async (req, context) => {
     try {
-      const { id } =  params;
+        const { params } = context;  
+    const id = await params.id;
 
       if (!id) throw new HttpError("user ID is required", 400);
 

@@ -9,10 +9,11 @@ import { getVerifiedUser } from "@/utils/token/jwtToken";
 import { NextResponse } from "next/server";
 
 // ✅ PUT - Update all fields except isVerified
-export const PUT = withErrorHandler(async (req, { params }) => {
+export const PUT = withErrorHandler(async (req, context) => {
     await connectDb();
 
-    const { id } = params;
+    const { params } = context;  
+    const id = await params.id;
     if (!id) throw new HttpError("Bill Entry ID is required", 400);
 
     const decoded = await getVerifiedUser();
@@ -73,10 +74,11 @@ export const PUT = withErrorHandler(async (req, { params }) => {
 });
 
 // ✅ DELETE - Delete by entry ID
-export const DELETE = withErrorHandler(async (req, { params }) => {
+export const DELETE = withErrorHandler(async (req, context) => {
     await connectDb();
 
-    const { id } =  params;
+       const { params } = context;  
+    const id = await params.id;
     if (!id) throw new HttpError("Bill Entry ID is required", 400);
 
     const decoded = await getVerifiedUser();
@@ -102,10 +104,11 @@ export const DELETE = withErrorHandler(async (req, { params }) => {
 });
 
 // ✅ PATCH - Update only isVerified
-export const PATCH = withErrorHandler(async (req, { params }) => {
+export const PATCH = withErrorHandler(async (req, context) => {
     await connectDb();
 
-    const { id } = params;
+       const { params } = context;  
+    const id = await params.id;
     if (!id) throw new HttpError("Bill Entry ID is required", 400);
 
     const decoded = await getVerifiedUser();

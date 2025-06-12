@@ -7,9 +7,10 @@ import { getVerifiedUser } from "@/utils/token/jwtToken";
 import { NextResponse } from "next/server";
 
 export const PUT = withErrorHandler(
-    async (req, { params }) => {
+    async (req, context) => {
         try {
-            const { id } = params;
+               const { params } = context;  
+    const id = await params.id;
             if (!id) {
                 throw new HttpError("Department ID is required", 400);
             }
@@ -49,9 +50,10 @@ export const PUT = withErrorHandler(
 // delete
 
 export const DELETE = withErrorHandler(
-    async (req, { params }) => {
+    async (req, context) => {
         try {
-            const { id } = params;
+               const { params } = context;  
+    const id = await params.id;
             if (!id) {
                 throw new HttpError("Department ID is required", 400);
             }
@@ -83,9 +85,10 @@ export const DELETE = withErrorHandler(
     }
 )
 export const PATCH = withErrorHandler(
-  async (req, { params }) => {
+  async (req, context) => {
     try {
-      const { id } = params;
+         const { params } = context;  
+    const id = await params.id;
       if (!id) throw new HttpError("Department ID is required", 400);
 
       const decoded = await getVerifiedUser();

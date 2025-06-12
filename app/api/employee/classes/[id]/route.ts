@@ -10,9 +10,10 @@ import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 
 export const PUT = withErrorHandler(
-    async (req, { params }) => {
+    async (req, context) => {
         try {
-            const { id } = params;
+               const { params } = context;  
+    const id = await params.id;
             if (!id) {
                 throw new HttpError("Class ID is required", 400);
             }
@@ -58,9 +59,10 @@ export const PUT = withErrorHandler(
 // delete
 
 export const DELETE = withErrorHandler(
-    async (req, { params }) => {
+    async (req, context) => {
         try {
-            const { id } = params;
+               const { params } = context;  
+    const id = await params.id;
             if (!id) {
                 throw new HttpError("Department ID is required", 400);
             }
@@ -94,9 +96,11 @@ export const DELETE = withErrorHandler(
 
 
 export const GET = withErrorHandler(
-  async (req, { params }) => {
+  async (req, context) => {
     try {
-      const { id: employeeId } = params;
+         const { params } = context;  
+    const id = await params.id;
+      const employeeId = id; // Assuming the ID in the URL is the employee ID
       if (!employeeId) throw new HttpError("Employee ID is required", 400);
 
       // Verify logged in user and role

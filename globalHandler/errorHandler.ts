@@ -27,6 +27,8 @@
 //   };
 // }
 
+
+
 // import { NextRequest, NextResponse } from 'next/server';
 // import logger from '@/globalHandler/winstonlogs';
 
@@ -58,37 +60,41 @@
 // }
 
 
-import { NextRequest, NextResponse } from 'next/server';
-import logger from '@/globalHandler/winstonlogs';
+import { NextRequest, NextResponse } from "next/server";
+import logger from "@/globalHandler/winstonlogs";
 
-type ContextWithParams = {
-  params: { id: string }; // match your dynamic route: /admin/[id]
+type RouteContext = {
+  params: Record<string, string>;
 };
 
-type RouteHandler = (
-  req: NextRequest,
-  context: ContextWithParams
-) => Promise<NextResponse>;
-
-export function withErrorHandler(handler: RouteHandler): RouteHandler {
-  return async (req: NextRequest, context: ContextWithParams) => {
+export function withErrorHandler(
+  handler: (
+    req: NextRequest,
+    context: RouteContext
+  ) => Promise<NextResponse>
+): (req: NextRequest, context: RouteContext) => Promise<NextResponse> {
+  return async (req, context) => {
     try {
       return await handler(req, context);
     } catch (error: any) {
-      const err = error as { message: string; status?: number };
-      const status = err.status || 500;
+      const status = error.status || 500;
 
       const shouldLogError = status >= 500 || status === 400 || status === 422;
 
       if (shouldLogError) {
-        logger.error(`[${req.method} ${req.url}] ${err.message}`);
+        logger.error(`[${req.method} ${req.url}] ${error.message}`);
       }
 
       return NextResponse.json(
-        { success: false, message: err.message || 'Internal Server Error' },
+        {
+          success: false,
+          message: error.message || "Internal Server Error",
+          status,
+        },
         { status }
       );
     }
   };
 }
+
 
