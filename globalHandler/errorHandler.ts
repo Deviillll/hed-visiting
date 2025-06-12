@@ -27,16 +27,51 @@
 //   };
 // }
 
+// import { NextRequest, NextResponse } from 'next/server';
+// import logger from '@/globalHandler/winstonlogs';
+
+// type RouteHandler = (
+//   req: NextRequest,
+//   context: { params: Record<string, string> }
+// ) => Promise<Response>;
+
+// export function withErrorHandler(handler: RouteHandler) {
+//   return async (req: NextRequest, context: { params: Record<string, string> }) => {
+//     try {
+//       return await handler(req, context);
+//     } catch (error: any) {
+//       const err = error as { message: string; status?: number };
+//       const status = err.status || 500;
+
+//       const shouldLogError = status >= 500 || status === 400 || status === 422;
+
+//       if (shouldLogError) {
+//         logger.error(`[${req.method} ${req.url}] ${err.message}`);
+//       }
+
+//       return NextResponse.json(
+//         { success: false, message: err.message || 'Internal Server Error', status },
+//         { status }
+//       );
+//     }
+//   };
+// }
+
+
 import { NextRequest, NextResponse } from 'next/server';
 import logger from '@/globalHandler/winstonlogs';
 
+type ContextWithParams = {
+  params: { id: string }; // match your dynamic route: /admin/[id]
+};
+
 type RouteHandler = (
   req: NextRequest,
-  context: { params: Record<string, string> }
-) => Promise<Response>;
+  context: ContextWithParams
+) => Promise<NextResponse>;
 
-export function withErrorHandler(handler: RouteHandler) {
-  return async (req: NextRequest, context: { params: Record<string, string> }) => {
+export function withErrorHandler(handler: RouteHandler): RouteHandler {
+  return async (req: NextRequest, context: ContextWithParams) => {
     try {
       return await handler(req, context);
     } catch (error: any) {
@@ -50,9 +85,10 @@ export function withErrorHandler(handler: RouteHandler) {
       }
 
       return NextResponse.json(
-        { success: false, message: err.message || 'Internal Server Error', status },
+        { success: false, message: err.message || 'Internal Server Error' },
         { status }
       );
     }
   };
 }
+

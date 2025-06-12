@@ -76,7 +76,7 @@ export const PUT = withErrorHandler(async (req, { params }) => {
 export const DELETE = withErrorHandler(async (req, { params }) => {
     await connectDb();
 
-    const { id } = await params;
+    const { id } =  params;
     if (!id) throw new HttpError("Bill Entry ID is required", 400);
 
     const decoded = await getVerifiedUser();

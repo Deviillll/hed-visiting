@@ -13,7 +13,7 @@ import { NextResponse } from "next/server";
 export const GET = withErrorHandler(
     async (req, { params }) => {
         try {
-            const { id } =await params;
+            const { id } = params;
             if (!id) {
                 throw new HttpError("bill ID is required", 400);
             }

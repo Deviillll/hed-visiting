@@ -96,7 +96,7 @@ export const DELETE = withErrorHandler(
 export const GET = withErrorHandler(
   async (req, { params }) => {
     try {
-      const { id: employeeId } =await params;
+      const { id: employeeId } = params;
       if (!employeeId) throw new HttpError("Employee ID is required", 400);
 
       // Verify logged in user and role
