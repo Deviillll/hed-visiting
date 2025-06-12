@@ -63,16 +63,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import logger from "@/globalHandler/winstonlogs";
 
-type RouteContext = {
-  params: Record<string, string>;
-};
-
 export function withErrorHandler(
   handler: (
     req: NextRequest,
-    context: RouteContext
+    context: any // <-- loosen this to any to fix Vercel build error
   ) => Promise<NextResponse>
-): (req: NextRequest, context: RouteContext) => Promise<NextResponse> {
+): (req: NextRequest, context: any) => Promise<NextResponse> {
   return async (req, context) => {
     try {
       return await handler(req, context);
