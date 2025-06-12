@@ -133,7 +133,11 @@ const employees = [
 	},
 	// Add more mock employees as needed
 ];
-
+const handleRateUpdate= (employee: Employee) => {
+	// This function will be used to handle rate updates for employees
+	// It can be implemented later as needed
+	console.log("Updating rates for employee:", employee);
+}
 // Column definition for principal data table
 const columns = [
 	{
@@ -297,8 +301,7 @@ export default function PrincipalsPage() {
 		addUser({
 			...createFormData,
 			role: "employee",
-			avatar:
-				"https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=100",
+			//avatar:"https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=100",
 		});
 
 		toast.success("Employee created successfully");
