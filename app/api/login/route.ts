@@ -6,7 +6,7 @@ import { withErrorHandler } from '@/globalHandler/errorHandler';
 import { HttpError } from '@/globalHandler/httpError';
 import connectDb from '@/lib/db'
 import { NextResponse } from 'next/server'
-//@ts-expect-error
+//@ts-ignore
 import bcrypt from "bcryptjs";
 
 import User from '@/lib/models/userModel'

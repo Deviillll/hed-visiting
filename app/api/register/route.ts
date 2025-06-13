@@ -4,7 +4,7 @@ import { HttpError } from '@/globalHandler/httpError';
 import connectDb from '@/lib/db'
 import Role from '@/lib/models/roleModel'
 import { NextResponse } from 'next/server'
-//@ts-expect-error
+//@ts-ignore
 import bcrypt from "bcryptjs";
 import User from '@/lib/models/userModel'
 import { generateRandomString } from '@/utils/token/jwtToken';

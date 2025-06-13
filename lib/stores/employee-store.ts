@@ -98,5 +98,5 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
 		}));
 	},
 }));
-export { Employee };
+
 

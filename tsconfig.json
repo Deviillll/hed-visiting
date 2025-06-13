@@ -22,6 +22,14 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/models/roleModel.js", "hooks/use-toast.ts"],
+  "include": [
+  "next-env.d.ts",
+  "**/*.ts",
+  "**/*.tsx",
+  ".next/types/**/*.ts",
+  "lib/models/roleModel.js",
+  "hooks/use-toast.ts"
+]
+  ,
   "exclude": ["node_modules"]
 }

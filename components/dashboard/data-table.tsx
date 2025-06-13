@@ -90,32 +90,23 @@ export function DataTable<T>({
 						<PaginationItem>
 							<PaginationPrevious
 								onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-								className={
-									currentPage === 1 ? "pointer-events-none opacity-50" : ""
-								}
-							/>
+								className={currentPage === 1 ? "pointer-events-none opacity-50" : ""} size={undefined}							/>
 						</PaginationItem>
 						{Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
 							<PaginationItem key={page}>
 								<PaginationLink
 									onClick={() => setCurrentPage(page)}
-									isActive={currentPage === page}
-								>
+									isActive={currentPage === page} size={undefined}								>
 									{page}
 								</PaginationLink>
 							</PaginationItem>
 						))}
 						<PaginationItem>
 							<PaginationNext
-								onClick={() =>
-									setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-								}
-								className={
-									currentPage === totalPages
-										? "pointer-events-none opacity-50"
-										: ""
-								}
-							/>
+								onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+								className={currentPage === totalPages
+									? "pointer-events-none opacity-50"
+									: ""} size={undefined}							/>
 						</PaginationItem>
 					</PaginationContent>
 				</Pagination>
