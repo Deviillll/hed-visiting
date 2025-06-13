@@ -53,32 +53,7 @@ export function LoginForm() {
     },
   });
 
-  // const onSubmit = async (data: LoginFormValues) => {
-  //   setIsLoading(true);
-  //   try {
-  //     const res = await axios.post("/api/login", {
-  //       email: data.email,
-  //       password: data.password,
-  //     });
-  //     const result = res.data;
-  //     const { success, statusCode, message } = result;
-
-  //     if (success && statusCode === 200) {
-  //       toast.success(`welcome ${result.data}`, {
-  //         description: message,
-  //         position: "top-right",
-  //         duration: 2000,
-  //       });
-  //       router.push("/dashboard");
-  //     }
-  //   } catch (error: any) {
-  //     toast.error("An error occurred", {
-  //       description: error.response?.data?.message || "Please try again later",
-  //     });
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+ 
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
 
@@ -187,27 +162,6 @@ export function LoginForm() {
               </Button>
             </form>
 
-            <div className="mt-6">
-              <p className="text-sm text-center text-muted-foreground mb-3">
-                Demo Accounts
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                {demoAccounts.map((account) => (
-                  <Button
-                    key={account.role}
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      handleDemoLogin(account.email, account.password)
-                    }
-                    disabled={isLoading}
-                    className="text-xs"
-                  >
-                    {account.role}
-                  </Button>
-                ))}
-              </div>
-            </div>
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-xs text-muted-foreground text-center">
