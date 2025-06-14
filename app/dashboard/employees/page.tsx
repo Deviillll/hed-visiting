@@ -36,7 +36,7 @@ interface Employee {
 export default function EmployeesPage() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+
 
   const fetchEmployees = useCallback(async () => {
     setLoading(true);
@@ -57,8 +57,12 @@ export default function EmployeesPage() {
       }));
 
       setEmployees(transformed);
-    } catch (error) {
-      toast.error("Failed to load employees");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     } finally {
       setLoading(false);
     }
@@ -79,8 +83,12 @@ export default function EmployeesPage() {
         toast.success("Employee created");
       }
       fetchEmployees();
-    } catch (error) {
-      toast.error("Failed to save employee");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     }
   };
 
@@ -91,8 +99,12 @@ export default function EmployeesPage() {
       toast.success("Employee deleted");
       fetchEmployees();
 		}
-    } catch (error) {
-      toast.error("Failed to delete employee");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     }
   };
 
@@ -104,8 +116,12 @@ export default function EmployeesPage() {
       });
       toast.success("Employee status updated");
       fetchEmployees();
-    } catch (error) {
-      toast.error("Failed to update status");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     }
   };
 

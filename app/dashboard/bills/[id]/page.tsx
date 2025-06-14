@@ -95,17 +95,20 @@ export default function BillDetailsPage({
         try {
           const res = await axiosInstance.get(`/bill/${id}`);
           setBill(res.data);
-        } catch (error) {
-          console.error(error);
-          setBill(undefined);
-        }
+        } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
+      setBill(null);
+    }
       }
     };
     fetchBill();
   }, [id]);
 
-  // Find the bill after billId is resolved
-  //const bill = billId ? bills.find((b) => b.id === billId) : undefined;
+ 
 
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -140,8 +143,12 @@ export default function BillDetailsPage({
       } else {
         setCurrentEmployee(null);
       }
-    } catch (error) {
-      console.error("Error fetching classes:", error);
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
       setCurrentEmployee(null);
     }
   };
@@ -155,8 +162,12 @@ export default function BillDetailsPage({
       setSelectedEmployees(rawEmployees);
 
       // console.log("Fetched added employees:", selectedEmployees);
-    } catch (error) {
-      console.error("Error fetching added employees:", error);
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
       setSelectedEmployees([]);
     }
   };
@@ -179,8 +190,13 @@ export default function BillDetailsPage({
       }));
 
       setEmployees(transformed);
-    } catch (error) {
-      toast.error("Failed to load employees");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
+      setEmployees([]);
     }
   }, []);
 
@@ -205,7 +221,7 @@ export default function BillDetailsPage({
 
   const handleSaveEmployee = async (emp: EmployeeData) => {
     try {
-      console.log(emp);
+      
       const res = await axiosInstance.post(`/billEntry?billId=${billId}`, {
         data: emp,
       });
@@ -216,9 +232,12 @@ export default function BillDetailsPage({
       } else {
         toast.error("Failed to save employee data");
       }
-    } catch (error) {
-      console.error("Error saving employee:", error);
-      toast.error("Failed to save employee data");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     }
   };
 
@@ -242,7 +261,7 @@ export default function BillDetailsPage({
       };
     });
 
-    console.log(currentEmployee);
+  
   };
 
   // Loading state while resolving params

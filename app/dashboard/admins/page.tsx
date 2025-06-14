@@ -12,7 +12,7 @@ import { toast } from "sonner";
 export default function AdminsPage() {
   const [admins, setAdmins] = useState<Admin[]>([]);
   const [loading, setLoading] = useState(true);
-  console.log("Rendering AdminsPage");
+  
 
   const fetchAdmins = useCallback(async () => {
     setLoading(true);
@@ -37,9 +37,14 @@ export default function AdminsPage() {
       }));
 
       setAdmins(transformed);
-    } catch (error) {
-      toast.error("Failed to load admins");
-    } finally {
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
+    }
+     finally {
       setLoading(false);
     }
   }, []);
@@ -75,14 +80,22 @@ export default function AdminsPage() {
               canCreateAdmin: data.canCreateAdmin ?? false,
             },
           };
-          console.log(payload);
+          if (!payload.name || !payload.email || !payload.password) {
+            toast.error("Name, email and password are required");
+            return;
+          }
           await axios.post("/admin", payload);
           toast.success("Admin created");
         }
         await fetchAdmins(); // reload list
-      } catch (error) {
-        toast.error("Failed to save admin");
       }
+      catch (error: any) {
+            toast.error("An error occurred", {
+              description: error.response?.data?.message || "Please try again later",
+              position: "top-right",
+              duration: 2000,
+            });
+          }
     },
     [fetchAdmins]
   );
@@ -93,9 +106,13 @@ export default function AdminsPage() {
         await axios.delete(`/admin/${id}`);
         toast.success("Admin deleted");
         await fetchAdmins();
-      } catch (error) {
-        toast.error("Failed to delete admin");
-      }
+      } catch (error: any) {
+            toast.error("An error occurred", {
+              description: error.response?.data?.message || "Please try again later",
+              position: "top-right",
+              duration: 2000,
+            });
+          }
     },
     [fetchAdmins]
   );
@@ -112,9 +129,13 @@ export default function AdminsPage() {
           }`
         );
         await fetchAdmins();
-      } catch (error) {
-        toast.error("Failed to update status");
-      }
+      } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
+    }
     },
     [fetchAdmins]
   );

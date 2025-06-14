@@ -23,6 +23,7 @@ import { toast } from "sonner";
 
 import { useAuth } from "@/lib/auth-context";
 import axios from "axios";
+import Link from "next/link";
 
 // Define the form schema
 const loginSchema = z.object({
@@ -86,16 +87,7 @@ export function LoginForm() {
     }
   };
 
-  // Demo accounts for easy testing
-  const demoAccounts = [
-    { role: "admin", email: "admin@gmail.com", password: "12345" },
-    { role: "principal", email: "principal@gmai.com", password: "12345" },
-    { role: "employee", email: "employee@gmail.com", password: "12345" },
-  ];
-
-  const handleDemoLogin = (email: string, password: string) => {
-    onSubmit({ email, password });
-  };
+ 
 
   return (
     <div className="flex justify-center items-center min-h-screen p-4">
@@ -163,10 +155,15 @@ export function LoginForm() {
             </form>
 
           </CardContent>
-          <CardFooter className="flex justify-center">
+          <CardFooter className="flex flex-col gap-y-4 justify-center">
             <p className="text-xs text-muted-foreground text-center">
               By signing in, you agree to our Terms of Service and Privacy
               Policy
+            </p>
+            <p className="text-xs text-muted-foreground text-center">
+              Don&apos;t have an account?{" "}<Link href="/register" className="text-primary hover:underline">
+              Register
+            </Link>
             </p>
           </CardFooter>
         </Card>

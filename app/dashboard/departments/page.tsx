@@ -34,8 +34,12 @@ export default function DepartmentsPage() {
       }));
 
       setDepartments(transformed);
-    } catch (error) {
-      toast.error("Failed to load departments");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     } finally {
       setLoading(false);
     }
@@ -63,8 +67,12 @@ export default function DepartmentsPage() {
       }
 
       await fetchDepartments(); // Refetch to sync with latest
-    } catch (error) {
-      toast.error("Failed to save department");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     }
   };
 
@@ -80,9 +88,13 @@ export default function DepartmentsPage() {
         }`
       );
       await fetchDepartments(); // ✅ refetch to show updated state
-    } catch (error) {
-      toast.error("Failed to update status");
-    }
+    } catch (error: any) {
+          toast.error("An error occurred", {
+            description: error.response?.data?.message || "Please try again later",
+            position: "top-right",
+            duration: 2000,
+          });
+        }
   };
 
   const handleDelete = async (id: string) => {
@@ -90,8 +102,12 @@ export default function DepartmentsPage() {
       await axios.delete(`/department/${id}`);
       toast.success("Department deleted");
       await fetchDepartments(); // re-fetch the updated list
-    } catch (error) {
-      toast.error("Failed to delete department");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     }
   };
 

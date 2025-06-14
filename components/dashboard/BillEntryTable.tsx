@@ -48,9 +48,12 @@ const BillEntryTable = ({
         toast.success("Bill entry deleted successfully");
         onDeleteSuccess();
       }
-    } catch (error) {
-        toast.error("Failed to delete bill entry");
-      console.error("Error deleting bill entry:", error);
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     }
   };
   const handleUpdate = async (id: string, updatedData: Partial<BillEntry>, currentEntry: BillEntry) => {
@@ -65,10 +68,13 @@ const BillEntryTable = ({
       onDeleteSuccess(); // Refresh the page to reflect changes
     }
     // Optionally refresh data or call a refresh function here
-  } catch (error) {
-    toast.error("Failed to update bill entry");
-    console.error("Update error:", error);
-  }
+  } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
+    }
 };
 const handleToggleVerified = async (billId: string, currentStatus: boolean) => {
   try {
@@ -78,10 +84,13 @@ const handleToggleVerified = async (billId: string, currentStatus: boolean) => {
       toast.success(`Bill entry ${!currentStatus ? "verified" : "unverified"} successfully`);
       onDeleteSuccess(); // Refresh the page to reflect changes
     }
-  } catch (error) {
-    toast.error("Failed to update verification status");
-    console.error(error);
-  }
+  } catch (error: any) {
+        toast.error("An error occurred", {
+          description: error.response?.data?.message || "Please try again later",
+          position: "top-right",
+          duration: 2000,
+        });
+      }
 };
 
 

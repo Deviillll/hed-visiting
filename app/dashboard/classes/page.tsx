@@ -28,8 +28,12 @@ export default function ClassesPage() {
       }));
 
       setClasses(transformed);
-    } catch (error) {
-      toast.error("Failed to load classes");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     } finally {
       setLoading(false);
     }
@@ -49,8 +53,12 @@ export default function ClassesPage() {
         toast.success("Class added");
       }
       await fetchClasses();
-    } catch (error) {
-      toast.error("Failed to save class");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     }
   };
 
@@ -59,8 +67,12 @@ export default function ClassesPage() {
       await axios.delete(`/class/${id}`);
       toast.success("Class deleted");
       await fetchClasses();
-    } catch {
-      toast.error("Failed to delete class");
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
     }
   };
   const handleStatusToggle = async (cls: Class) => {
@@ -74,8 +86,12 @@ export default function ClassesPage() {
           }`
         );
         await fetchClasses(); // ✅ refetch to show updated state
-      } catch (error) {
-        toast.error("Failed to update status");
+      } catch (error: any) {
+        toast.error("An error occurred", {
+          description: error.response?.data?.message || "Please try again later",
+          position: "top-right",
+          duration: 2000,
+        });
       }
     };
 

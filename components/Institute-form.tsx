@@ -90,8 +90,11 @@ export function InstituteForm() {
           // No record found – do nothing
           return;
         }
-        // Handle or log other errors if needed
-        console.error("Failed to fetch institute data:", error);
+        toast.error("An error occurred", {
+          description: error.response?.data?.message || "Please try again later",
+          position: "top-right",
+          duration: 2000,
+        });
       }
     };
 
@@ -157,14 +160,14 @@ export function InstituteForm() {
         className="w-full mx-auto"
       >
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
+          <CardTitle className="text-3xl font-bold text-center">
             Organization Profile
           </CardTitle>
         </CardHeader>
         <CardContent>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-x-6 gap-y-3 lg:w-[70%] mx-auto"
+            className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-x-6 gap-y-3 lg:w-[70%] mx-auto md:mt-16"
           >
             <div className="space-y-2">
               <Label htmlFor="name">Name *</Label>

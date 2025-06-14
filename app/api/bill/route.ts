@@ -97,15 +97,15 @@ export const GET = withErrorHandler(
             }
 
 
-            const bills = await Bill.find().sort({ createdAt: -1 });
+            const bills = await Bill.find({instituteId: resolver.institute_id}).sort({ createdAt: -1 });
 
             if (!bills || bills.length === 0) {
                 throw new HttpError("No bill found", 404);
             }
-            
-         
-            return NextResponse.json(message("Bill created successfully", 201, bills), {
-                status: 201,
+
+
+            return NextResponse.json(message("Bill fetched successfully", 200, bills), {
+                status: 200,
             });
 
 

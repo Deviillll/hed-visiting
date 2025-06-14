@@ -40,11 +40,13 @@ export default function BillsPage() {
       }));
 
       setBills(transformed);
-    } catch (error) {
-      toast.error("Failed to load bills");
-    } finally {
-      //setLoading(false);
-    }
+    } catch (error: any) {
+      toast.error("An error occurred", {
+        description: error.response?.data?.message || "Please try again later",
+        position: "top-right",
+        duration: 2000,
+      });
+    } 
   };
 
   useEffect(() => {

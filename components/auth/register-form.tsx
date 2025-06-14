@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import Link from "next/link";
 
 // Define the form schema
 const registerSchema = z.object({
@@ -164,10 +165,16 @@ export function RegisterForm() {
               </Button>
             </form>
           </CardContent>
-          <CardFooter className="flex justify-center">
+          <CardFooter className="flex flex-col gap-y-4 justify-center">
             <p className="text-xs text-muted-foreground text-center">
               By signing in, you agree to our Terms of Service and Privacy
               Policy
+            </p>
+            <p className="text-xs text-muted-foreground text-center">
+              Already have an account?{" "}
+              <Link href="/login" className="text-primary hover:underline">
+                Login
+              </Link>
             </p>
           </CardFooter>
         </Card>
